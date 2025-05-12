@@ -3,9 +3,11 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.Screen;
 import com.example.movieticketbookingbe.model.Seat;
 import com.example.movieticketbookingbe.model.SeatType;
+import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.repository.ScreenRepository;
 import com.example.movieticketbookingbe.repository.SeatRepository;
 import com.example.movieticketbookingbe.repository.SeatTypeRepository;
+import com.example.movieticketbookingbe.repository.TheaterRepository;
 import com.example.movieticketbookingbe.service.ScreenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,38 +24,65 @@ public class ScreenServiceImpl implements ScreenService {
     private final ScreenRepository screenRepository;
     private final SeatTypeRepository seatTypeRepository;
     private final SeatRepository seatRepository;
+    private final TheaterRepository theaterRepository;
 
     @Override
     public Screen createScreen(Screen screen) {
+        // Validate theater exists
+        Theater theater = theaterRepository.findById(screen.getTheaterId())
+                .orElseThrow(() -> new RuntimeException("Theater not found"));
+
+        // Set the theater relationship
+        screen.setTheater(theater);
+
+        // Save the screen
         Screen savedScreen = screenRepository.save(screen);
+
+        // Create default seat types and seats
         createDefaultSeatTypes(savedScreen);
+
         return savedScreen;
     }
 
     private void createDefaultSeatTypes(Screen screen) {
-        // Create default seat types
+        // Get or create default seat types
         List<SeatType> seatTypes = new ArrayList<>();
 
-        SeatType standard = new SeatType();
-        standard.setName("Standard");
-        standard.setDescription("Ghế thường");
-        standard.setPriceMultiplier(1.0);
-        standard.setIsActive(true);
-        seatTypes.add(seatTypeRepository.save(standard));
+        // Standard seats
+        SeatType standard = seatTypeRepository.findByName("Standard")
+                .orElseGet(() -> {
+                    SeatType newType = new SeatType();
+                    newType.setName("Standard");
+                    newType.setDescription("Ghế thường");
+                    newType.setPriceMultiplier(1.0);
+                    newType.setIsActive(true);
+                    return seatTypeRepository.save(newType);
+                });
+        seatTypes.add(standard);
 
-        SeatType vip = new SeatType();
-        vip.setName("VIP");
-        vip.setDescription("Ghế VIP");
-        vip.setPriceMultiplier(1.5);
-        vip.setIsActive(true);
-        seatTypes.add(seatTypeRepository.save(vip));
+        // VIP seats
+        SeatType vip = seatTypeRepository.findByName("VIP")
+                .orElseGet(() -> {
+                    SeatType newType = new SeatType();
+                    newType.setName("VIP");
+                    newType.setDescription("Ghế VIP");
+                    newType.setPriceMultiplier(1.5);
+                    newType.setIsActive(true);
+                    return seatTypeRepository.save(newType);
+                });
+        seatTypes.add(vip);
 
-        SeatType couple = new SeatType();
-        couple.setName("Couple");
-        couple.setDescription("Ghế đôi");
-        couple.setPriceMultiplier(2.0);
-        couple.setIsActive(true);
-        seatTypes.add(seatTypeRepository.save(couple));
+        // Couple seats
+        SeatType couple = seatTypeRepository.findByName("Couple")
+                .orElseGet(() -> {
+                    SeatType newType = new SeatType();
+                    newType.setName("Couple");
+                    newType.setDescription("Ghế đôi");
+                    newType.setPriceMultiplier(2.0);
+                    newType.setIsActive(true);
+                    return seatTypeRepository.save(newType);
+                });
+        seatTypes.add(couple);
 
         // Create seats
         createSeatsForScreen(screen, seatTypes);

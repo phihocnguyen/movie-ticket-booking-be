@@ -90,6 +90,7 @@ CREATE TABLE movies (
 CREATE TABLE showtimes (
     id BIGSERIAL PRIMARY KEY,
     movie_id BIGINT NOT NULL REFERENCES movies(id),
+    theater_id BIGINT NOT NULL REFERENCES theaters(id),
     screen_id BIGINT NOT NULL REFERENCES screens(id),
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
@@ -132,37 +133,21 @@ CREATE TABLE payments (
     updated_at TIMESTAMP
 );
 
--- Create food_categories table
-CREATE TABLE food_categories (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    is_active BOOLEAN NOT NULL DEFAULT true
-);
-
--- Create foods table
-CREATE TABLE foods (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    description TEXT NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    image_url TEXT NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    category VARCHAR(255) NOT NULL,
-    preparation_time INTEGER NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
-
 -- Create theater_food_inventory table
 CREATE TABLE theater_food_inventory (
     id BIGSERIAL PRIMARY KEY,
     theater_id BIGINT NOT NULL REFERENCES theaters(id),
-    food_id BIGINT NOT NULL REFERENCES foods(id),
+    name VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    image_url TEXT NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    preparation_time INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP,
+    UNIQUE (theater_id, name)
 );
 
 -- Create booking_foods table
