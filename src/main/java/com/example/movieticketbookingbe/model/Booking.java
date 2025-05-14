@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +30,10 @@ public class Booking {
 
     @Column(name = "showtime_id", nullable = false)
     private Long showtimeId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "showtime_id", insertable = false, updatable = false)
+    private Showtime showtime;
 
     @Column(nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
@@ -51,6 +58,7 @@ public class Booking {
     private List<BookingFoodInfo> bookingFoods = new ArrayList<>();
 
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Payment payment;
 
     @CreationTimestamp
@@ -69,6 +77,22 @@ public class Booking {
 
         @Column(nullable = false)
         private Double price;
+
+        @Transient
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private String seatName;
+
+        @Transient
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private String seatType;
+
+        @Transient
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private Integer rowNumber;
+
+        @Transient
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private Integer columnNumber;
     }
 
     @Embeddable
@@ -84,6 +108,10 @@ public class Booking {
 
         @Column(nullable = false)
         private Double price;
+
+        @Transient
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private String foodName;
     }
 
     public enum BookingStatus {
@@ -91,5 +119,11 @@ public class Booking {
         CONFIRMED,
         CANCELLED,
         COMPLETED
+    }
+
+    @JsonProperty("showtime")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Showtime getShowtime() {
+        return showtime;
     }
 }

@@ -1,9 +1,13 @@
 package com.example.movieticketbookingbe.service.impl;
 
+import com.example.movieticketbookingbe.dto.BookingRequestDTO;
 import com.example.movieticketbookingbe.model.Booking;
+import com.example.movieticketbookingbe.model.Seat;
+import com.example.movieticketbookingbe.model.TheaterFoodInventory;
 import com.example.movieticketbookingbe.model.Booking.BookingStatus;
 import com.example.movieticketbookingbe.repository.BookingRepository;
 import com.example.movieticketbookingbe.repository.SeatRepository;
+import com.example.movieticketbookingbe.repository.TheaterFoodInventoryRepository;
 import com.example.movieticketbookingbe.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import java.util.Optional;
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final SeatRepository seatRepository;
+    private final TheaterFoodInventoryRepository foodInventoryRepository;
 
     @Override
     public Booking createBooking(Booking booking) {
@@ -43,6 +48,7 @@ public class BookingServiceImpl implements BookingService {
             });
         }
 
+        loadBookingInfo(savedBooking);
         return savedBooking;
     }
 
@@ -62,37 +68,51 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Booking> getBookingById(Long id) {
-        return bookingRepository.findById(id);
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        loadBookingInfo(booking);
+        return Optional.of(booking);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
+        List<Booking> bookings = bookingRepository.findAll();
+        bookings.forEach(this::loadBookingInfo);
+        return bookings;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Booking> getActiveBookings() {
-        return bookingRepository.findByIsActiveTrue();
+        List<Booking> bookings = bookingRepository.findByIsActiveTrue();
+        bookings.forEach(this::loadBookingInfo);
+        return bookings;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Booking> getBookingsByUser(Long userId) {
-        return bookingRepository.findByUserId(userId);
+        List<Booking> bookings = bookingRepository.findByUserId(userId);
+        bookings.forEach(this::loadBookingInfo);
+        return bookings;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Booking> getBookingsByShowtime(Long showtimeId) {
-        return bookingRepository.findByShowtimeId(showtimeId);
+        List<Booking> bookings = bookingRepository.findByShowtimeId(showtimeId);
+        bookings.forEach(this::loadBookingInfo);
+        return bookings;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Booking> searchBookings(Long userId, Long showtimeId, LocalDateTime startTime, LocalDateTime endTime) {
-        return bookingRepository.findByUserIdAndShowtimeIdAndBookingTimeBetween(userId, showtimeId, startTime, endTime);
+        List<Booking> bookings = bookingRepository.findByUserIdAndShowtimeIdAndBookingTimeBetween(userId, showtimeId,
+                startTime, endTime);
+        bookings.forEach(this::loadBookingInfo);
+        return bookings;
     }
 
     @Override
@@ -121,5 +141,34 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         booking.setStatus(BookingStatus.COMPLETED);
         return bookingRepository.save(booking);
+    }
+
+    private void loadSeatInfo(Booking booking) {
+        if (booking.getBookingSeats() != null) {
+            for (Booking.BookingSeatInfo seatInfo : booking.getBookingSeats()) {
+                Seat seat = seatRepository.findById(seatInfo.getSeatId()).orElse(null);
+                if (seat != null) {
+                    seatInfo.setSeatName(seat.getSeatNumber());
+                    seatInfo.setSeatType(seat.getSeatTypeName());
+                }
+            }
+        }
+    }
+
+    private void loadFoodInfo(Booking booking) {
+        if (booking.getBookingFoods() != null) {
+            for (Booking.BookingFoodInfo foodInfo : booking.getBookingFoods()) {
+                TheaterFoodInventory food = foodInventoryRepository.findById(foodInfo.getFoodInventoryId())
+                        .orElse(null);
+                if (food != null) {
+                    foodInfo.setFoodName(food.getName());
+                }
+            }
+        }
+    }
+
+    private void loadBookingInfo(Booking booking) {
+        loadSeatInfo(booking);
+        loadFoodInfo(booking);
     }
 }
