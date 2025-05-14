@@ -60,7 +60,8 @@ public class Showtime {
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    @OneToMany(mappedBy = "showtime")
+    @OneToMany
+    @JoinColumn(name = "showtime_id")
     @JsonIgnore
     private List<Booking> bookings;
 

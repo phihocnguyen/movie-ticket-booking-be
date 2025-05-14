@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Booking.BookingStatus;
 import com.example.movieticketbookingbe.repository.BookingRepository;
+import com.example.movieticketbookingbe.repository.SeatRepository;
 import com.example.movieticketbookingbe.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,32 @@ import java.util.Optional;
 @Transactional
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
+    private final SeatRepository seatRepository;
 
     @Override
     public Booking createBooking(Booking booking) {
-        return bookingRepository.save(booking);
+        // Set initial status if not provided
+        if (booking.getStatus() == null) {
+            booking.setStatus(BookingStatus.PENDING);
+        }
+
+        // Set isActive to true by default
+        booking.setIsActive(true);
+
+        // Save the booking
+        Booking savedBooking = bookingRepository.save(booking);
+
+        // Update seat status to inactive
+        if (booking.getBookingSeats() != null) {
+            booking.getBookingSeats().forEach(seatInfo -> {
+                seatRepository.findById(seatInfo.getSeatId()).ifPresent(seat -> {
+                    seat.setIsActive(false);
+                    seatRepository.save(seat);
+                });
+            });
+        }
+
+        return savedBooking;
     }
 
     @Override
@@ -78,6 +101,17 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         booking.setStatus(BookingStatus.CANCELLED);
         booking.setIsActive(false);
+
+        // Reactivate seats when booking is cancelled
+        if (booking.getBookingSeats() != null) {
+            booking.getBookingSeats().forEach(seatInfo -> {
+                seatRepository.findById(seatInfo.getSeatId()).ifPresent(seat -> {
+                    seat.setIsActive(true);
+                    seatRepository.save(seat);
+                });
+            });
+        }
+
         return bookingRepository.save(booking);
     }
 

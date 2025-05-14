@@ -1,6 +1,9 @@
 package com.example.movieticketbookingbe.controller;
 
+import com.example.movieticketbookingbe.dto.BookingRequestDTO;
 import com.example.movieticketbookingbe.model.Booking;
+import com.example.movieticketbookingbe.model.Booking.BookingSeatInfo;
+import com.example.movieticketbookingbe.model.Booking.BookingFoodInfo;
 import com.example.movieticketbookingbe.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,13 +27,48 @@ import java.util.List;
 public class BookingController {
     private final BookingService bookingService;
 
-    @Operation(summary = "Create a new booking", description = "Creates a new booking with the provided information")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Booking created successfully", content = @Content(schema = @Schema(implementation = Booking.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
+    @Operation(summary = "Create a new booking", description = "Creates a new booking with seats and foods")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Booking created successfully", content = @Content(schema = @Schema(implementation = Booking.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Booking> createBooking(
+            @Parameter(description = "Booking request data", required = true) @RequestBody BookingRequestDTO bookingRequest) {
+        Booking booking = new Booking();
+        booking.setUserId(bookingRequest.getUserId());
+        booking.setShowtimeId(bookingRequest.getShowtimeId());
+        booking.setBookingTime(bookingRequest.getBookingTime());
+        booking.setTotalAmount(bookingRequest.getTotalAmount());
+        booking.setStatus(bookingRequest.getStatus());
+        booking.setIsActive(true);
+
+        // Create booking seats
+        if (bookingRequest.getBookingSeats() != null) {
+            List<BookingSeatInfo> bookingSeats = new ArrayList<>();
+            for (BookingRequestDTO.BookingSeatDTO seatDTO : bookingRequest.getBookingSeats()) {
+                BookingSeatInfo bookingSeat = new BookingSeatInfo();
+                bookingSeat.setSeatId(seatDTO.getSeatId());
+                bookingSeat.setPrice(seatDTO.getPrice());
+                bookingSeats.add(bookingSeat);
+            }
+            booking.setBookingSeats(bookingSeats);
+        }
+
+        // Create booking foods
+        if (bookingRequest.getBookingFoods() != null) {
+            List<BookingFoodInfo> bookingFoods = new ArrayList<>();
+            for (BookingRequestDTO.BookingFoodDTO foodDTO : bookingRequest.getBookingFoods()) {
+                BookingFoodInfo bookingFood = new BookingFoodInfo();
+                bookingFood.setFoodInventoryId(foodDTO.getFoodInventoryId());
+                bookingFood.setQuantity(foodDTO.getQuantity());
+                bookingFood.setPrice(foodDTO.getPrice());
+                bookingFoods.add(bookingFood);
+            }
+            booking.setBookingFoods(bookingFoods);
+        }
+
         return ResponseEntity.ok(bookingService.createBooking(booking));
     }
 

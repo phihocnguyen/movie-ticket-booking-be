@@ -44,7 +44,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany
+    @JoinColumn(name = "user_id")
     private List<Booking> bookings;
 
     @Column(nullable = false, unique = true)

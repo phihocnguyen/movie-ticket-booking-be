@@ -1,0 +1,13 @@
+{
+  "theater": {
+    "id": 1
+  },
+  "name": "Popcorn Large",
+  "description": "Bắp rang bơ size lớn, đủ cho 2-3 người",
+  "price": 5.99,
+  "imageUrl": "https://example.com/images/popcorn-large.jpg",
+  "category": "Snacks",
+  "preparationTime": 5,
+  "quantity": 100,
+  "isActive": true
+} 

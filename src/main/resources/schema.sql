@@ -113,11 +113,19 @@ CREATE TABLE bookings (
 
 -- Create booking_seats table
 CREATE TABLE booking_seats (
-    id BIGSERIAL PRIMARY KEY,
     booking_id BIGINT NOT NULL REFERENCES bookings(id),
     seat_id BIGINT NOT NULL REFERENCES seats(id),
     price DECIMAL(10,2) NOT NULL,
-    UNIQUE (booking_id, seat_id)
+    PRIMARY KEY (booking_id, seat_id)
+);
+
+-- Create booking_foods table
+CREATE TABLE booking_foods (
+    booking_id BIGINT NOT NULL REFERENCES bookings(id),
+    food_inventory_id BIGINT NOT NULL REFERENCES theater_food_inventory(id),
+    quantity INTEGER NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (booking_id, food_inventory_id)
 );
 
 -- Create payments table
@@ -150,15 +158,6 @@ CREATE TABLE theater_food_inventory (
     UNIQUE (theater_id, name)
 );
 
--- Create booking_foods table
-CREATE TABLE booking_foods (
-    id BIGSERIAL PRIMARY KEY,
-    booking_id BIGINT NOT NULL REFERENCES bookings(id),
-    food_inventory_id BIGINT NOT NULL REFERENCES theater_food_inventory(id),
-    quantity INTEGER NOT NULL,
-    price DECIMAL(10,2) NOT NULL
-);
-
 -- Create vouchers table
 CREATE TABLE vouchers (
     id BIGSERIAL PRIMARY KEY,
@@ -172,14 +171,6 @@ CREATE TABLE vouchers (
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP,
     updated_at TIMESTAMP
-);
-
--- Create booking_vouchers table
-CREATE TABLE booking_vouchers (
-    id BIGSERIAL PRIMARY KEY,
-    booking_id BIGINT NOT NULL REFERENCES bookings(id),
-    voucher_id BIGINT NOT NULL REFERENCES vouchers(id),
-    discount_amount DECIMAL(10,2) NOT NULL
 );
 
 -- Create staff table

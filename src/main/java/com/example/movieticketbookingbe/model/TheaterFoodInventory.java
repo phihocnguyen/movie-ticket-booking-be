@@ -9,8 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "theater_food_inventory")
@@ -59,8 +57,4 @@ public class TheaterFoodInventory {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "foodInventory")
-    @JsonIgnore
-    private List<BookingFood> bookingFoods = new ArrayList<>();
 }

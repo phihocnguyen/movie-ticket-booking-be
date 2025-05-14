@@ -1,0 +1,14 @@
+{
+  "name": "CGV Aeon Mall Bình Tân",
+  "address": "Tầng 3, Aeon Mall Bình Tân, Số 1 Đường số 17A, Khu phố 11, Phường Bình Trị Đông B, Quận Bình Tân",
+  "city": "Hồ Chí Minh",
+  "state": "Hồ Chí Minh",
+  "country": "Việt Nam",
+  "zipCode": "70000",
+  "phoneNumber": "028 1234 5678",
+  "email": "contact@cgv-aeonbinhtan.com",
+  "isActive": true,
+  "openingTime": "08:00:00",
+  "closingTime": "23:00:00",
+  "totalScreens": 8
+} 

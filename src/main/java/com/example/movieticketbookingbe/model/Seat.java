@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.util.List;
 
 @Entity
 @Table(name = "seats")
@@ -38,10 +37,6 @@ public class Seat {
 
     @Column(nullable = false)
     private Boolean isActive = true;
-
-    @OneToMany(mappedBy = "seat")
-    @JsonIgnore
-    private List<BookingSeat> bookingSeats;
 
     @Transient
     @JsonInclude
