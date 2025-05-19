@@ -1,0 +1,19 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: movie-ticket-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - movie-ticket-network
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  movie-ticket-network:
+    driver: bridge

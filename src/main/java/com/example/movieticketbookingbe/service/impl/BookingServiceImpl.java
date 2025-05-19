@@ -10,8 +10,10 @@ import com.example.movieticketbookingbe.repository.SeatRepository;
 import com.example.movieticketbookingbe.repository.TheaterFoodInventoryRepository;
 import com.example.movieticketbookingbe.service.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +29,21 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking createBooking(Booking booking) {
+        // Check if any seat is inactive
+        if (booking.getBookingSeats() != null) {
+            for (Booking.BookingSeatInfo seatInfo : booking.getBookingSeats()) {
+                Seat seat = seatRepository.findById(seatInfo.getSeatId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy ghế"));
+
+                if (!seat.getIsActive()) {
+                    System.out.println("Ghế " + seat.getSeatNumber() + " đã được đặt");
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT,
+                            "Ghế " + seat.getSeatNumber() + " đã được đặt");
+                }
+            }
+        }
+
         // Set initial status if not provided
         if (booking.getStatus() == null) {
             booking.setStatus(BookingStatus.PENDING);
