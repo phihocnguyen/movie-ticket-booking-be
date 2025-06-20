@@ -1,6 +1,9 @@
 package com.example.movieticketbookingbe.controller;
 
+import com.example.movieticketbookingbe.dto.response.StaffResponseDTO;
+import com.example.movieticketbookingbe.mapper.StaffMapper;
 import com.example.movieticketbookingbe.model.Staff;
+import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.service.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -80,8 +83,12 @@ public class StaffController {
     @Operation(summary = "Get active staff members", description = "Returns a list of all active staff members")
     @ApiResponse(responseCode = "200", description = "List of active staff members retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<Staff>> getActiveStaff() {
-        return ResponseEntity.ok(staffService.getActiveStaff());
+    public ResponseEntity<List<StaffResponseDTO>> getActiveStaff() {
+        List<Staff> staffList = staffService.findByUserRoleAndUserIsActiveTrue(User.UserRole.THEATER_OWNER);
+        List<StaffResponseDTO> dtoList = staffList.stream()
+                .map(StaffMapper::toDTO)
+                .toList();
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(summary = "Get staff members by theater", description = "Returns a list of staff members for a specific theater")

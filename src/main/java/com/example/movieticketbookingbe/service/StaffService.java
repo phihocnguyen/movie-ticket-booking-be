@@ -1,6 +1,8 @@
 package com.example.movieticketbookingbe.service;
 
 import com.example.movieticketbookingbe.model.Staff;
+import com.example.movieticketbookingbe.model.User;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,7 @@ public interface StaffService {
     List<Staff> getAllStaff();
 
     List<Staff> getActiveStaff();
-
+    List<Staff> findByUserRoleAndUserIsActiveTrue(User.UserRole role);
     List<Staff> getStaffByTheater(Long theaterId);
 
     Optional<Staff> getStaffByUser(Long userId);

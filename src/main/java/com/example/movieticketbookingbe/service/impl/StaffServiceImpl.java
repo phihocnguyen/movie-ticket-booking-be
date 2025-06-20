@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.service.impl;
 
 import com.example.movieticketbookingbe.model.Staff;
+import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.repository.StaffRepository;
 import com.example.movieticketbookingbe.service.StaffService;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,13 @@ public class StaffServiceImpl implements StaffService {
     @Transactional(readOnly = true)
     public List<Staff> getActiveStaff() {
         return staffRepository.findByIsActiveTrue();
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Staff> findByUserRoleAndUserIsActiveTrue(User.UserRole role) {
+        return staffRepository.findByUserRoleAndUserIsActiveTrue(role);
     }
 
     @Override
