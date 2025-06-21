@@ -2,6 +2,7 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.dto.StaffDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.dto.staff.StaffCreateDTO;
 import com.example.movieticketbookingbe.mapper.StaffMapper;
 import com.example.movieticketbookingbe.model.Staff;
 import com.example.movieticketbookingbe.model.User;
@@ -32,8 +33,11 @@ public class StaffController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<Staff> createStaff(@RequestBody Staff staff) {
-        return ResponseEntity.ok(staffService.createStaff(staff));
+    public ResponseEntity<ApiResponseDTO<StaffDTO>> createStaff(@RequestBody StaffCreateDTO staffCreateDTO) {
+        Staff staff = StaffMapper.toEntity(staffCreateDTO);
+        // Nếu cần, set theater và user từ service hoặc mapping bổ sung
+        StaffDTO dto = StaffMapper.toDTO(staffService.createStaff(staff));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Staff member created successfully", dto));
     }
 
     @Operation(summary = "Update a staff member", description = "Updates an existing staff member by their ID")
@@ -89,7 +93,7 @@ public class StaffController {
         List<StaffDTO> dtoList = staffList.stream()
                 .map(StaffMapper::toDTO)
                 .toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active staff members retrieved successfully", dtoList));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách nhân viên đang hoạt động thành công", dtoList));
     }
 
     @Operation(summary = "Get staff members by theater", description = "Returns a list of staff members for a specific theater")
@@ -98,7 +102,7 @@ public class StaffController {
     public ResponseEntity<ApiResponseDTO<List<StaffDTO>>> getStaffByTheater(
             @Parameter(description = "ID of the theater") @PathVariable Long theaterId) {
         List<StaffDTO> dtoList = staffService.getStaffByTheater(theaterId).stream().map(StaffMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theater's staff members retrieved successfully", dtoList));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách nhân viên theo rạp thành công", dtoList));
     }
 
     @Operation(summary = "Get staff member by user", description = "Returns a staff member associated with a specific user")
@@ -110,7 +114,7 @@ public class StaffController {
     public ResponseEntity<ApiResponseDTO<StaffDTO>> getStaffByUser(
             @Parameter(description = "ID of the user") @PathVariable Long userId) {
         return staffService.getStaffByUser(userId)
-                .map(staff -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Staff member found", StaffMapper.toDTO(staff))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Staff member not found", null)));
+                .map(staff -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy nhân viên", StaffMapper.toDTO(staff))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy nhân viên", null)));
     }
 }

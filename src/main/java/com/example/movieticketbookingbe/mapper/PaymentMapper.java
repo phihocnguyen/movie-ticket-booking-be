@@ -1,7 +1,10 @@
 package com.example.movieticketbookingbe.mapper;
 
 import com.example.movieticketbookingbe.dto.PaymentDTO;
+import com.example.movieticketbookingbe.dto.payment.PaymentCreateDTO;
 import com.example.movieticketbookingbe.model.Payment;
+import com.example.movieticketbookingbe.model.Payment.PaymentMethod;
+import com.example.movieticketbookingbe.model.Payment.PaymentStatus;
 
 public class PaymentMapper {
     public static PaymentDTO toDTO(Payment payment) {
@@ -17,5 +20,17 @@ public class PaymentMapper {
         dto.setCreatedAt(payment.getCreatedAt());
         dto.setUpdatedAt(payment.getUpdatedAt());
         return dto;
+    }
+
+    public static Payment toEntity(PaymentCreateDTO dto) {
+        if (dto == null) return null;
+        Payment payment = new Payment();
+        // payment.setBooking cần set ở service nếu cần
+        payment.setAmount(dto.getAmount());
+        payment.setPaymentMethod(dto.getPaymentMethod() != null ? PaymentMethod.valueOf(dto.getPaymentMethod()) : null);
+        payment.setStatus(dto.getStatus() != null ? PaymentStatus.valueOf(dto.getStatus()) : null);
+        payment.setTransactionId(dto.getTransactionId());
+        payment.setIsActive(dto.getIsActive());
+        return payment;
     }
 } 

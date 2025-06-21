@@ -5,6 +5,7 @@ import com.example.movieticketbookingbe.service.MovieService;
 import com.example.movieticketbookingbe.dto.MovieDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.MovieMapper;
+import com.example.movieticketbookingbe.dto.movie.MovieCreateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,7 +32,8 @@ public class MovieController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<MovieDTO>> createMovie(@RequestBody Movie movie) {
+    public ResponseEntity<ApiResponseDTO<MovieDTO>> createMovie(@RequestBody MovieCreateDTO movieCreateDTO) {
+        Movie movie = MovieMapper.toEntity(movieCreateDTO);
         MovieDTO dto = MovieMapper.toDTO(movieService.createMovie(movie));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie created successfully", dto));
     }
@@ -59,7 +61,7 @@ public class MovieController {
     public ResponseEntity<ApiResponseDTO<Void>> deleteMovie(
             @Parameter(description = "ID of the movie to delete") @PathVariable Long id) {
         movieService.deleteMovie(id);
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie deleted successfully", null));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Xóa phim thành công", null));
     }
 
     @Operation(summary = "Get a movie by ID", description = "Returns a movie by its ID")
@@ -71,8 +73,8 @@ public class MovieController {
     public ResponseEntity<ApiResponseDTO<MovieDTO>> getMovieById(
             @Parameter(description = "ID of the movie to retrieve") @PathVariable Long id) {
         return movieService.getMovieById(id)
-                .map(movie -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie found", MovieMapper.toDTO(movie))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Movie not found", null)));
+                .map(movie -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy phim", MovieMapper.toDTO(movie))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy phim", null)));
     }
 
     @Operation(summary = "Get all movies", description = "Returns a list of all movies")
@@ -80,7 +82,7 @@ public class MovieController {
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getAllMovies() {
         List<MovieDTO> dtos = movieService.getAllMovies().stream().map(MovieMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of movies retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách phim thành công", dtos));
     }
 
     @Operation(summary = "Search movies", description = "Search movies by title, genre, and language")
@@ -91,7 +93,7 @@ public class MovieController {
             @Parameter(description = "Movie genre to filter by") @RequestParam(required = false) String genre,
             @Parameter(description = "Movie language to filter by") @RequestParam(required = false) String language) {
         List<MovieDTO> dtos = movieService.searchMovies(title, genre, language).stream().map(MovieMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Search results retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm kiếm phim thành công", dtos));
     }
 
     @Operation(summary = "Get random movies", description = "Returns 3 random movies")
@@ -99,7 +101,7 @@ public class MovieController {
     @GetMapping("/random")
     public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getRandomMovies() {
         List<MovieDTO> dtos = movieService.getRandomMovies().stream().map(MovieMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Random movies retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy phim ngẫu nhiên thành công", dtos));
     }
 
     @Operation(summary = "Get latest movies", description = "Returns 10 latest movies")
@@ -107,7 +109,7 @@ public class MovieController {
     @GetMapping("/latest")
     public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getLatestMovies() {
         List<MovieDTO> dtos = movieService.getLatestMovies().stream().map(MovieMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Latest movies retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy phim mới nhất thành công", dtos));
     }
 
     @Operation(summary = "Get top rated movies", description = "Returns 10 top rated movies")
@@ -115,6 +117,6 @@ public class MovieController {
     @GetMapping("/top-rated")
     public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getTopRatedMovies() {
         List<MovieDTO> dtos = movieService.getTopRatedMovies().stream().map(MovieMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Top rated movies retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy phim được đánh giá cao thành công", dtos));
     }
 }

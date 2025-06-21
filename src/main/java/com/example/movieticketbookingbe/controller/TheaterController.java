@@ -4,6 +4,7 @@ import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.service.TheaterService;
 import com.example.movieticketbookingbe.dto.TheaterDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
 import com.example.movieticketbookingbe.mapper.TheaterMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,8 +32,10 @@ public class TheaterController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<Theater> createTheater(@RequestBody Theater theater) {
-        return ResponseEntity.ok(theaterService.createTheater(theater));
+    public ResponseEntity<ApiResponseDTO<TheaterDTO>> createTheater(@RequestBody TheaterCreateDTO theaterCreateDTO) {
+        Theater theater = TheaterMapper.toEntity(theaterCreateDTO);
+        TheaterDTO dto = TheaterMapper.toDTO(theaterService.createTheater(theater));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater created successfully", dto));
     }
 
     @Operation(summary = "Update a theater", description = "Updates an existing theater by its ID")
@@ -69,8 +72,8 @@ public class TheaterController {
     public ResponseEntity<ApiResponseDTO<TheaterDTO>> getTheaterById(
             @Parameter(description = "ID of the theater to retrieve") @PathVariable Long id) {
         return theaterService.getTheaterById(id)
-                .map(theater -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater found", TheaterMapper.toDTO(theater))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Theater not found", null)));
+                .map(theater -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy rạp phim", TheaterMapper.toDTO(theater))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy rạp phim", null)));
     }
 
     @Operation(summary = "Get all theaters", description = "Returns a list of all theaters")
@@ -78,7 +81,7 @@ public class TheaterController {
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<TheaterDTO>>> getAllTheaters() {
         List<TheaterDTO> dtos = theaterService.getAllTheaters().stream().map(TheaterMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theaters retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách rạp phim thành công", dtos));
     }
 
     @Operation(summary = "Get active theaters", description = "Returns a list of all active theaters")
@@ -86,7 +89,7 @@ public class TheaterController {
     @GetMapping("/active")
     public ResponseEntity<ApiResponseDTO<List<TheaterDTO>>> getActiveTheaters() {
         List<TheaterDTO> dtos = theaterService.getActiveTheaters().stream().map(TheaterMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active theaters retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách rạp phim đang hoạt động thành công", dtos));
     }
 
     @Operation(summary = "Search theaters", description = "Search theaters by name, city, and state")

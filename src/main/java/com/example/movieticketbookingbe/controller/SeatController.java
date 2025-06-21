@@ -4,6 +4,7 @@ import com.example.movieticketbookingbe.model.Seat;
 import com.example.movieticketbookingbe.service.SeatService;
 import com.example.movieticketbookingbe.dto.SeatDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.dto.seat.SeatCreateDTO;
 import com.example.movieticketbookingbe.mapper.SeatMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,7 +32,8 @@ public class SeatController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<SeatDTO>> createSeat(@RequestBody Seat seat) {
+    public ResponseEntity<ApiResponseDTO<SeatDTO>> createSeat(@RequestBody SeatCreateDTO seatCreateDTO) {
+        Seat seat = SeatMapper.toEntity(seatCreateDTO);
         SeatDTO dto = SeatMapper.toDTO(seatService.createSeat(seat));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Seat created successfully", dto));
     }
@@ -59,7 +61,7 @@ public class SeatController {
     public ResponseEntity<ApiResponseDTO<Void>> deleteSeat(
             @Parameter(description = "ID of the seat to delete") @PathVariable Long id) {
         seatService.deleteSeat(id);
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Seat deleted successfully", null));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Xóa ghế thành công", null));
     }
 
     @Operation(summary = "Get a seat by ID", description = "Returns a seat by its ID")
@@ -71,8 +73,8 @@ public class SeatController {
     public ResponseEntity<ApiResponseDTO<SeatDTO>> getSeatById(
             @Parameter(description = "ID of the seat to retrieve") @PathVariable Long id) {
         return seatService.getSeatById(id)
-                .map(seat -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Seat found", SeatMapper.toDTO(seat))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Seat not found", null)));
+                .map(seat -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy ghế", SeatMapper.toDTO(seat))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy ghế", null)));
     }
 
     @Operation(summary = "Get all seats", description = "Returns a list of all seats")
@@ -80,7 +82,7 @@ public class SeatController {
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<SeatDTO>>> getAllSeats() {
         List<SeatDTO> dtos = seatService.getAllSeats().stream().map(SeatMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of seats retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách ghế thành công", dtos));
     }
 
     @Operation(summary = "Get active seats", description = "Returns a list of all active seats")
@@ -88,7 +90,7 @@ public class SeatController {
     @GetMapping("/active")
     public ResponseEntity<ApiResponseDTO<List<SeatDTO>>> getActiveSeats() {
         List<SeatDTO> dtos = seatService.getActiveSeats().stream().map(SeatMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active seats retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách ghế đang hoạt động thành công", dtos));
     }
 
     @Operation(summary = "Get seats by screen", description = "Returns a list of seats for a specific screen")
@@ -97,7 +99,7 @@ public class SeatController {
     public ResponseEntity<ApiResponseDTO<List<SeatDTO>>> getSeatsByScreen(
             @Parameter(description = "ID of the screen") @PathVariable Long screenId) {
         List<SeatDTO> dtos = seatService.getSeatsByScreen(screenId).stream().map(SeatMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of screen's seats retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách ghế theo phòng chiếu thành công", dtos));
     }
 
     @Operation(summary = "Check if seat exists", description = "Checks if a seat number is already taken in a screen")

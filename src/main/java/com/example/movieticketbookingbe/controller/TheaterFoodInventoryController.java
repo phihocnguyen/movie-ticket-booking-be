@@ -5,6 +5,7 @@ import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.service.TheaterFoodInventoryService;
 import com.example.movieticketbookingbe.dto.TheaterFoodInventoryDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInventoryCreateDTO;
 import com.example.movieticketbookingbe.mapper.TheaterFoodInventoryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,9 +33,10 @@ public class TheaterFoodInventoryController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<TheaterFoodInventory> addFoodToTheater(
-            @RequestBody TheaterFoodInventory theaterFoodInventory) {
-        return ResponseEntity.ok(theaterFoodInventoryService.createTheaterFoodInventory(theaterFoodInventory));
+    public ResponseEntity<ApiResponseDTO<TheaterFoodInventoryDTO>> addFoodToTheater(@RequestBody TheaterFoodInventoryCreateDTO foodCreateDTO) {
+        TheaterFoodInventory food = TheaterFoodInventoryMapper.toEntity(foodCreateDTO);
+        TheaterFoodInventoryDTO dto = TheaterFoodInventoryMapper.toDTO(theaterFoodInventoryService.createTheaterFoodInventory(food));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Food added successfully", dto));
     }
 
     @Operation(summary = "Update theater food", description = "Updates an existing food item in theater's inventory")

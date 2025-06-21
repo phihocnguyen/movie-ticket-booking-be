@@ -2,6 +2,7 @@ package com.example.movieticketbookingbe.mapper;
 
 import com.example.movieticketbookingbe.dto.TheaterDTO;
 import com.example.movieticketbookingbe.model.Theater;
+import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
 
 public class TheaterMapper {
     public static TheaterDTO toDTO(Theater theater) {
@@ -23,5 +24,23 @@ public class TheaterMapper {
         dto.setCreatedAt(theater.getCreatedAt());
         dto.setUpdatedAt(theater.getUpdatedAt());
         return dto;
+    }
+
+    public static Theater toEntity(TheaterCreateDTO dto) {
+        if (dto == null) return null;
+        Theater theater = new Theater();
+        theater.setName(dto.getName());
+        theater.setAddress(dto.getAddress());
+        theater.setCity(dto.getCity());
+        theater.setState(dto.getState());
+        theater.setCountry(dto.getCountry());
+        theater.setZipCode(dto.getZipCode());
+        theater.setPhoneNumber(dto.getPhoneNumber());
+        theater.setEmail(dto.getEmail());
+        theater.setIsActive(dto.getIsActive());
+        theater.setOpeningTime(dto.getOpeningTime());
+        theater.setClosingTime(dto.getClosingTime());
+        theater.setTotalScreens(dto.getTotalScreens());
+        return theater;
     }
 } 

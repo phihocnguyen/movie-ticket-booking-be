@@ -5,6 +5,10 @@ import com.example.movieticketbookingbe.service.SeatTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.movieticketbookingbe.dto.seattype.SeatTypeCreateDTO;
+import com.example.movieticketbookingbe.dto.SeatTypeDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.SeatTypeMapper;
 
 import java.util.List;
 
@@ -15,8 +19,10 @@ public class SeatTypeController {
     private final SeatTypeService seatTypeService;
 
     @PostMapping
-    public ResponseEntity<SeatType> createSeatType(@RequestBody SeatType seatType) {
-        return ResponseEntity.ok(seatTypeService.createSeatType(seatType));
+    public ResponseEntity<ApiResponseDTO<SeatTypeDTO>> createSeatType(@RequestBody SeatTypeCreateDTO seatTypeCreateDTO) {
+        SeatType seatType = SeatTypeMapper.toEntity(seatTypeCreateDTO);
+        SeatTypeDTO dto = SeatTypeMapper.toDTO(seatTypeService.createSeatType(seatType));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Seat type created successfully", dto));
     }
 
     @PutMapping("/{id}")

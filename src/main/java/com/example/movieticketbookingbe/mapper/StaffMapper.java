@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.mapper;
 
 import com.example.movieticketbookingbe.dto.StaffDTO;
+import com.example.movieticketbookingbe.dto.staff.StaffCreateDTO;
 import com.example.movieticketbookingbe.model.Staff;
 
 public class StaffMapper {
@@ -16,5 +17,16 @@ public class StaffMapper {
         dto.setCreatedAt(staff.getCreatedAt());
         dto.setUpdatedAt(staff.getUpdatedAt());
         return dto;
+    }
+
+    public static Staff toEntity(StaffCreateDTO dto) {
+        if (dto == null) return null;
+        Staff staff = new Staff();
+        staff.setTheater(null);
+        staff.setUser(null);
+        staff.setPosition(dto.getPosition());
+        staff.setSalary(dto.getSalary());
+        staff.setIsActive(dto.getIsActive());
+        return staff;
     }
 }

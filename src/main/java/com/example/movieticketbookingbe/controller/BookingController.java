@@ -37,42 +37,11 @@ public class BookingController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<Booking> createBooking(
+    public ResponseEntity<ApiResponseDTO<BookingDTO>> createBooking(
             @Parameter(description = "Booking request data", required = true) @RequestBody BookingRequestDTO bookingRequest) {
-        Booking booking = new Booking();
-        booking.setUserId(bookingRequest.getUserId());
-        booking.setShowtimeId(bookingRequest.getShowtimeId());
-        booking.setBookingTime(bookingRequest.getBookingTime());
-        booking.setTotalAmount(bookingRequest.getTotalAmount());
-        booking.setStatus(bookingRequest.getStatus());
-        booking.setIsActive(true);
-
-        // Create booking seats
-        if (bookingRequest.getBookingSeats() != null) {
-            List<BookingSeatInfo> bookingSeats = new ArrayList<>();
-            for (BookingRequestDTO.BookingSeatDTO seatDTO : bookingRequest.getBookingSeats()) {
-                BookingSeatInfo bookingSeat = new BookingSeatInfo();
-                bookingSeat.setSeatId(seatDTO.getSeatId());
-                bookingSeat.setPrice(seatDTO.getPrice());
-                bookingSeats.add(bookingSeat);
-            }
-            booking.setBookingSeats(bookingSeats);
-        }
-
-        // Create booking foods
-        if (bookingRequest.getBookingFoods() != null) {
-            List<BookingFoodInfo> bookingFoods = new ArrayList<>();
-            for (BookingRequestDTO.BookingFoodDTO foodDTO : bookingRequest.getBookingFoods()) {
-                BookingFoodInfo bookingFood = new BookingFoodInfo();
-                bookingFood.setFoodInventoryId(foodDTO.getFoodInventoryId());
-                bookingFood.setQuantity(foodDTO.getQuantity());
-                bookingFood.setPrice(foodDTO.getPrice());
-                bookingFoods.add(bookingFood);
-            }
-            booking.setBookingFoods(bookingFoods);
-        }
-
-        return ResponseEntity.ok(bookingService.createBooking(booking));
+        Booking booking = BookingMapper.toEntity(bookingRequest);
+        BookingDTO dto = BookingMapper.toDTO(bookingService.createBooking(booking));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking created successfully", dto));
     }
 
     @Operation(summary = "Update a booking", description = "Updates an existing booking by its ID")
@@ -98,7 +67,7 @@ public class BookingController {
     public ResponseEntity<ApiResponseDTO<Void>> deleteBooking(
             @Parameter(description = "ID of the booking to delete") @PathVariable Long id) {
         bookingService.deleteBooking(id);
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking deleted successfully", null));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Xóa đặt vé thành công", null));
     }
 
     @Operation(summary = "Get a booking by ID", description = "Returns a booking by its ID")
@@ -110,8 +79,8 @@ public class BookingController {
     public ResponseEntity<ApiResponseDTO<BookingDTO>> getBookingById(
             @Parameter(description = "ID of the booking to retrieve") @PathVariable Long id) {
         return bookingService.getBookingById(id)
-                .map(booking -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking found", BookingMapper.toDTO(booking))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Booking not found", null)));
+                .map(booking -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy đặt vé", BookingMapper.toDTO(booking))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy đặt vé", null)));
     }
 
     @Operation(summary = "Get all bookings", description = "Returns a list of all bookings")
@@ -119,7 +88,7 @@ public class BookingController {
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getAllBookings() {
         List<BookingDTO> dtos = bookingService.getAllBookings().stream().map(BookingMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of bookings retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách đặt vé thành công", dtos));
     }
 
     @Operation(summary = "Get active bookings", description = "Returns a list of all active bookings")
@@ -127,7 +96,7 @@ public class BookingController {
     @GetMapping("/active")
     public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getActiveBookings() {
         List<BookingDTO> dtos = bookingService.getActiveBookings().stream().map(BookingMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active bookings retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách đặt vé đang hoạt động thành công", dtos));
     }
 
     @Operation(summary = "Get bookings by user", description = "Returns a list of bookings for a specific user")
@@ -136,7 +105,7 @@ public class BookingController {
     public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getBookingsByUser(
             @Parameter(description = "ID of the user") @PathVariable Long userId) {
         List<BookingDTO> dtos = bookingService.getBookingsByUser(userId).stream().map(BookingMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of user's bookings retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách đặt vé theo người dùng thành công", dtos));
     }
 
     @Operation(summary = "Get bookings by showtime", description = "Returns a list of bookings for a specific showtime")
@@ -145,7 +114,7 @@ public class BookingController {
     public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getBookingsByShowtime(
             @Parameter(description = "ID of the showtime") @PathVariable Long showtimeId) {
         List<BookingDTO> dtos = bookingService.getBookingsByShowtime(showtimeId).stream().map(BookingMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of showtime bookings retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách đặt vé theo suất chiếu thành công", dtos));
     }
 
     @Operation(summary = "Search bookings", description = "Search bookings by various criteria")

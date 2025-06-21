@@ -5,6 +5,7 @@ import com.example.movieticketbookingbe.service.ScreenService;
 import com.example.movieticketbookingbe.dto.ScreenDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.ScreenMapper;
+import com.example.movieticketbookingbe.dto.screen.ScreenCreateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,7 +32,8 @@ public class ScreenController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<ScreenDTO>> createScreen(@RequestBody Screen screen) {
+    public ResponseEntity<ApiResponseDTO<ScreenDTO>> createScreen(@RequestBody ScreenCreateDTO screenCreateDTO) {
+        Screen screen = ScreenMapper.toEntity(screenCreateDTO);
         ScreenDTO dto = ScreenMapper.toDTO(screenService.createScreen(screen));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen created successfully", dto));
     }
@@ -59,7 +61,7 @@ public class ScreenController {
     public ResponseEntity<ApiResponseDTO<Void>> deleteScreen(
             @Parameter(description = "ID of the screen to delete") @PathVariable Long id) {
         screenService.deleteScreen(id);
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen deleted successfully", null));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Xóa phòng chiếu thành công", null));
     }
 
     @Operation(summary = "Get a screen by ID", description = "Returns a screen by its ID")
@@ -71,8 +73,8 @@ public class ScreenController {
     public ResponseEntity<ApiResponseDTO<ScreenDTO>> getScreenById(
             @Parameter(description = "ID of the screen to retrieve") @PathVariable Long id) {
         return screenService.getScreenById(id)
-                .map(screen -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen found", ScreenMapper.toDTO(screen))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Screen not found", null)));
+                .map(screen -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy phòng chiếu", ScreenMapper.toDTO(screen))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy phòng chiếu", null)));
     }
 
     @Operation(summary = "Get all screens", description = "Returns a list of all screens")
@@ -80,7 +82,7 @@ public class ScreenController {
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<ScreenDTO>>> getAllScreens() {
         List<ScreenDTO> dtos = screenService.getAllScreens().stream().map(ScreenMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of screens retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách phòng chiếu thành công", dtos));
     }
 
     @Operation(summary = "Get active screens", description = "Returns a list of all active screens")
@@ -88,7 +90,7 @@ public class ScreenController {
     @GetMapping("/active")
     public ResponseEntity<ApiResponseDTO<List<ScreenDTO>>> getActiveScreens() {
         List<ScreenDTO> dtos = screenService.getActiveScreens().stream().map(ScreenMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active screens retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách phòng chiếu đang hoạt động thành công", dtos));
     }
 
     @Operation(summary = "Get screens by theater", description = "Returns a list of screens for a specific theater")
@@ -97,7 +99,7 @@ public class ScreenController {
     public ResponseEntity<ApiResponseDTO<List<ScreenDTO>>> getScreensByTheater(
             @Parameter(description = "ID of the theater") @PathVariable Long theaterId) {
         List<ScreenDTO> dtos = screenService.getScreensByTheater(theaterId).stream().map(ScreenMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theater's screens retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách phòng chiếu theo rạp thành công", dtos));
     }
 
     @Operation(summary = "Check if screen name exists", description = "Checks if a screen name is already taken in a theater")

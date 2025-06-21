@@ -1,7 +1,8 @@
- package com.example.movieticketbookingbe.mapper;
+package com.example.movieticketbookingbe.mapper;
 
 import com.example.movieticketbookingbe.dto.SeatTypeDTO;
 import com.example.movieticketbookingbe.model.SeatType;
+import com.example.movieticketbookingbe.dto.seattype.SeatTypeCreateDTO;
 
 public class SeatTypeMapper {
     public static SeatTypeDTO toDTO(SeatType seatType) {
@@ -13,5 +14,15 @@ public class SeatTypeMapper {
         dto.setPriceMultiplier(seatType.getPriceMultiplier());
         dto.setIsActive(seatType.getIsActive());
         return dto;
+    }
+
+    public static SeatType toEntity(SeatTypeCreateDTO dto) {
+        if (dto == null) return null;
+        SeatType seatType = new SeatType();
+        seatType.setName(dto.getName());
+        seatType.setDescription(dto.getDescription());
+        seatType.setPriceMultiplier(dto.getPriceMultiplier());
+        seatType.setIsActive(dto.getIsActive());
+        return seatType;
     }
 }

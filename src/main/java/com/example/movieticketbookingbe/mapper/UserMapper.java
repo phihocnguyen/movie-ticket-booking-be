@@ -1,7 +1,9 @@
 package com.example.movieticketbookingbe.mapper;
 
 import com.example.movieticketbookingbe.dto.UserDTO;
+import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
 import com.example.movieticketbookingbe.model.User;
+import com.example.movieticketbookingbe.model.User.UserRole;
 
 public class UserMapper {
     public static UserDTO toDTO(User user) {
@@ -19,5 +21,20 @@ public class UserMapper {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         return dto;
+    }
+
+    public static User toEntity(UserCreateDTO dto) {
+        if (dto == null) return null;
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setRole(dto.getRole() != null ? UserRole.valueOf(dto.getRole()) : null);
+        user.setUsername(dto.getUsername());
+        user.setFullName(dto.getFullName());
+        user.setDateOfBirth(dto.getDateOfBirth());
+        user.setIsActive(true);
+        return user;
     }
 } 
