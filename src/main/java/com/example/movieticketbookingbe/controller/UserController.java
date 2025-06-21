@@ -2,6 +2,9 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.service.UserService;
+import com.example.movieticketbookingbe.dto.UserDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,8 +31,9 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    public ResponseEntity<ApiResponseDTO<UserDTO>> createUser(@RequestBody User user) {
+        UserDTO dto = UserMapper.toDTO(userService.createUser(user));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "User created successfully", dto));
     }
 
     @Operation(summary = "Update a user", description = "Updates an existing user by their ID")
@@ -39,10 +43,11 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<ApiResponseDTO<UserDTO>> updateUser(
             @Parameter(description = "ID of the user to update") @PathVariable Long id,
             @RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
+        UserDTO dto = UserMapper.toDTO(userService.updateUser(id, user));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "User updated successfully", dto));
     }
 
     @Operation(summary = "Delete a user", description = "Deletes a user by their ID")
@@ -51,10 +56,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(
+    public ResponseEntity<ApiResponseDTO<Void>> deleteUser(
             @Parameter(description = "ID of the user to delete") @PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "User deleted successfully", null));
     }
 
     @Operation(summary = "Get a user by ID", description = "Returns a user by their ID")
@@ -63,25 +68,27 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<ApiResponseDTO<UserDTO>> getUserById(
             @Parameter(description = "ID of the user to retrieve") @PathVariable Long id) {
         return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(user -> ResponseEntity.ok(new ApiResponseDTO<>(200, "User found", UserMapper.toDTO(user))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "User not found", null)));
     }
 
     @Operation(summary = "Get all users", description = "Returns a list of all users")
     @ApiResponse(responseCode = "200", description = "List of users retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<ApiResponseDTO<List<UserDTO>>> getAllUsers() {
+        List<UserDTO> dtos = userService.getAllUsers().stream().map(UserMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of users retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get active users", description = "Returns a list of all active users")
     @ApiResponse(responseCode = "200", description = "List of active users retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<User>> getActiveUsers() {
-        return ResponseEntity.ok(userService.getActiveUsers());
+    public ResponseEntity<ApiResponseDTO<List<UserDTO>>> getActiveUsers() {
+        List<UserDTO> dtos = userService.getActiveUsers().stream().map(UserMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active users retrieved successfully", dtos));
     }
 
     @Operation(summary = "Check if email exists", description = "Checks if an email address is already registered")

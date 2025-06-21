@@ -10,8 +10,24 @@ services:
     networks:
       - movie-ticket-network
 
+  postgres:
+    image: postgres:latest
+    container_name: movie-ticket-postgres
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - movie-ticket-network
+
 volumes:
   redis-data:
+    driver: local
+  postgres-data:
     driver: local
 
 networks:

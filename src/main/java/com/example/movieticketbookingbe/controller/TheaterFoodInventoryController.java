@@ -3,6 +3,9 @@ package com.example.movieticketbookingbe.controller;
 import com.example.movieticketbookingbe.model.TheaterFoodInventory;
 import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.service.TheaterFoodInventoryService;
+import com.example.movieticketbookingbe.dto.TheaterFoodInventoryDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.TheaterFoodInventoryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -82,16 +85,18 @@ public class TheaterFoodInventoryController {
     @Operation(summary = "Get active theater foods", description = "Returns all active food items from all theaters")
     @ApiResponse(responseCode = "200", description = "List of active theater foods retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<TheaterFoodInventory>> getActiveTheaterFoods() {
-        return ResponseEntity.ok(theaterFoodInventoryService.getActiveTheaterFoodInventory());
+    public ResponseEntity<ApiResponseDTO<List<TheaterFoodInventoryDTO>>> getActiveTheaterFoods() {
+        List<TheaterFoodInventoryDTO> dtos = theaterFoodInventoryService.getActiveTheaterFoodInventory().stream().map(TheaterFoodInventoryMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active theater foods retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get theater foods by theater", description = "Returns all food items for a specific theater")
     @ApiResponse(responseCode = "200", description = "List of theater foods retrieved successfully")
     @GetMapping("/theater/{theaterId}")
-    public ResponseEntity<List<TheaterFoodInventory>> getTheaterFoodsByTheater(
+    public ResponseEntity<ApiResponseDTO<List<TheaterFoodInventoryDTO>>> getTheaterFoodsByTheater(
             @Parameter(description = "ID of the theater") @PathVariable Long theaterId) {
-        return ResponseEntity.ok(theaterFoodInventoryService.getTheaterFoodInventoryByTheater(theaterId));
+        List<TheaterFoodInventoryDTO> dtos = theaterFoodInventoryService.getTheaterFoodInventoryByTheater(theaterId).stream().map(TheaterFoodInventoryMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theater foods retrieved successfully", dtos));
     }
 
     @Operation(summary = "Check if food exists in theater", description = "Checks if a food item exists in a theater's inventory")

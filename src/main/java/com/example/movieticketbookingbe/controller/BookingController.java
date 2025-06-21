@@ -5,6 +5,9 @@ import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Booking.BookingSeatInfo;
 import com.example.movieticketbookingbe.model.Booking.BookingFoodInfo;
 import com.example.movieticketbookingbe.service.BookingService;
+import com.example.movieticketbookingbe.dto.BookingDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.BookingMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -79,10 +82,11 @@ public class BookingController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Booking> updateBooking(
+    public ResponseEntity<ApiResponseDTO<BookingDTO>> updateBooking(
             @Parameter(description = "ID of the booking to update") @PathVariable Long id,
             @RequestBody Booking booking) {
-        return ResponseEntity.ok(bookingService.updateBooking(id, booking));
+        BookingDTO dto = BookingMapper.toDTO(bookingService.updateBooking(id, booking));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking updated successfully", dto));
     }
 
     @Operation(summary = "Delete a booking", description = "Deletes a booking by its ID")
@@ -91,10 +95,10 @@ public class BookingController {
             @ApiResponse(responseCode = "404", description = "Booking not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBooking(
+    public ResponseEntity<ApiResponseDTO<Void>> deleteBooking(
             @Parameter(description = "ID of the booking to delete") @PathVariable Long id) {
         bookingService.deleteBooking(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking deleted successfully", null));
     }
 
     @Operation(summary = "Get a booking by ID", description = "Returns a booking by its ID")
@@ -103,41 +107,45 @@ public class BookingController {
             @ApiResponse(responseCode = "404", description = "Booking not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Booking> getBookingById(
+    public ResponseEntity<ApiResponseDTO<BookingDTO>> getBookingById(
             @Parameter(description = "ID of the booking to retrieve") @PathVariable Long id) {
         return bookingService.getBookingById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(booking -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking found", BookingMapper.toDTO(booking))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Booking not found", null)));
     }
 
     @Operation(summary = "Get all bookings", description = "Returns a list of all bookings")
     @ApiResponse(responseCode = "200", description = "List of bookings retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<Booking>> getAllBookings() {
-        return ResponseEntity.ok(bookingService.getAllBookings());
+    public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getAllBookings() {
+        List<BookingDTO> dtos = bookingService.getAllBookings().stream().map(BookingMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of bookings retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get active bookings", description = "Returns a list of all active bookings")
     @ApiResponse(responseCode = "200", description = "List of active bookings retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<Booking>> getActiveBookings() {
-        return ResponseEntity.ok(bookingService.getActiveBookings());
+    public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getActiveBookings() {
+        List<BookingDTO> dtos = bookingService.getActiveBookings().stream().map(BookingMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active bookings retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get bookings by user", description = "Returns a list of bookings for a specific user")
     @ApiResponse(responseCode = "200", description = "List of user's bookings retrieved successfully")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Booking>> getBookingsByUser(
+    public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getBookingsByUser(
             @Parameter(description = "ID of the user") @PathVariable Long userId) {
-        return ResponseEntity.ok(bookingService.getBookingsByUser(userId));
+        List<BookingDTO> dtos = bookingService.getBookingsByUser(userId).stream().map(BookingMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of user's bookings retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get bookings by showtime", description = "Returns a list of bookings for a specific showtime")
     @ApiResponse(responseCode = "200", description = "List of showtime bookings retrieved successfully")
     @GetMapping("/showtime/{showtimeId}")
-    public ResponseEntity<List<Booking>> getBookingsByShowtime(
+    public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getBookingsByShowtime(
             @Parameter(description = "ID of the showtime") @PathVariable Long showtimeId) {
-        return ResponseEntity.ok(bookingService.getBookingsByShowtime(showtimeId));
+        List<BookingDTO> dtos = bookingService.getBookingsByShowtime(showtimeId).stream().map(BookingMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of showtime bookings retrieved successfully", dtos));
     }
 
     @Operation(summary = "Search bookings", description = "Search bookings by various criteria")

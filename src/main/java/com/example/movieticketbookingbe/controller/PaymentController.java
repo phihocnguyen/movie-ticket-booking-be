@@ -2,6 +2,9 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.Payment;
 import com.example.movieticketbookingbe.service.PaymentService;
+import com.example.movieticketbookingbe.dto.PaymentDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.PaymentMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,8 +31,9 @@ public class PaymentController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
-        return ResponseEntity.ok(paymentService.createPayment(payment));
+    public ResponseEntity<ApiResponseDTO<PaymentDTO>> createPayment(@RequestBody Payment payment) {
+        PaymentDTO dto = PaymentMapper.toDTO(paymentService.createPayment(payment));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment created successfully", dto));
     }
 
     @Operation(summary = "Update a payment", description = "Updates an existing payment by its ID")
@@ -39,10 +43,11 @@ public class PaymentController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Payment> updatePayment(
+    public ResponseEntity<ApiResponseDTO<PaymentDTO>> updatePayment(
             @Parameter(description = "ID of the payment to update") @PathVariable Long id,
             @RequestBody Payment payment) {
-        return ResponseEntity.ok(paymentService.updatePayment(id, payment));
+        PaymentDTO dto = PaymentMapper.toDTO(paymentService.updatePayment(id, payment));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment updated successfully", dto));
     }
 
     @Operation(summary = "Delete a payment", description = "Deletes a payment by its ID")
@@ -51,10 +56,10 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePayment(
+    public ResponseEntity<ApiResponseDTO<Void>> deletePayment(
             @Parameter(description = "ID of the payment to delete") @PathVariable Long id) {
         paymentService.deletePayment(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment deleted successfully", null));
     }
 
     @Operation(summary = "Get a payment by ID", description = "Returns a payment by its ID")
@@ -63,26 +68,28 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Payment> getPaymentById(
+    public ResponseEntity<ApiResponseDTO<PaymentDTO>> getPaymentById(
             @Parameter(description = "ID of the payment to retrieve") @PathVariable Long id) {
         return paymentService.getPaymentById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(payment -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment found", PaymentMapper.toDTO(payment))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Payment not found", null)));
     }
 
     @Operation(summary = "Get all payments", description = "Returns a list of all payments")
     @ApiResponse(responseCode = "200", description = "List of payments retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayments() {
-        return ResponseEntity.ok(paymentService.getAllPayments());
+    public ResponseEntity<ApiResponseDTO<List<PaymentDTO>>> getAllPayments() {
+        List<PaymentDTO> dtos = paymentService.getAllPayments().stream().map(PaymentMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of payments retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get payment by booking", description = "Returns the payment for a specific booking")
     @ApiResponse(responseCode = "200", description = "Payment retrieved successfully")
     @GetMapping("/booking/{bookingId}")
-    public ResponseEntity<Payment> getPaymentByBooking(
+    public ResponseEntity<ApiResponseDTO<PaymentDTO>> getPaymentByBooking(
             @Parameter(description = "ID of the booking") @PathVariable Long bookingId) {
-        return ResponseEntity.ok(paymentService.getPaymentByBooking(bookingId));
+        PaymentDTO dto = PaymentMapper.toDTO(paymentService.getPaymentByBooking(bookingId));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment retrieved successfully", dto));
     }
 
     @Operation(summary = "Complete a payment", description = "Marks a payment as completed")
