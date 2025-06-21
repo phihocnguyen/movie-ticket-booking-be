@@ -2,6 +2,9 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.service.TheaterService;
+import com.example.movieticketbookingbe.dto.TheaterDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.TheaterMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -63,25 +66,27 @@ public class TheaterController {
             @ApiResponse(responseCode = "404", description = "Theater not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Theater> getTheaterById(
+    public ResponseEntity<ApiResponseDTO<TheaterDTO>> getTheaterById(
             @Parameter(description = "ID of the theater to retrieve") @PathVariable Long id) {
         return theaterService.getTheaterById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(theater -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater found", TheaterMapper.toDTO(theater))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Theater not found", null)));
     }
 
     @Operation(summary = "Get all theaters", description = "Returns a list of all theaters")
     @ApiResponse(responseCode = "200", description = "List of theaters retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<Theater>> getAllTheaters() {
-        return ResponseEntity.ok(theaterService.getAllTheaters());
+    public ResponseEntity<ApiResponseDTO<List<TheaterDTO>>> getAllTheaters() {
+        List<TheaterDTO> dtos = theaterService.getAllTheaters().stream().map(TheaterMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theaters retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get active theaters", description = "Returns a list of all active theaters")
     @ApiResponse(responseCode = "200", description = "List of active theaters retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<Theater>> getActiveTheaters() {
-        return ResponseEntity.ok(theaterService.getActiveTheaters());
+    public ResponseEntity<ApiResponseDTO<List<TheaterDTO>>> getActiveTheaters() {
+        List<TheaterDTO> dtos = theaterService.getActiveTheaters().stream().map(TheaterMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active theaters retrieved successfully", dtos));
     }
 
     @Operation(summary = "Search theaters", description = "Search theaters by name, city, and state")

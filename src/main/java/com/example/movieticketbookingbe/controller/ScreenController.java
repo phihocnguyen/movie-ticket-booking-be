@@ -2,6 +2,9 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.Screen;
 import com.example.movieticketbookingbe.service.ScreenService;
+import com.example.movieticketbookingbe.dto.ScreenDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.ScreenMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,8 +31,9 @@ public class ScreenController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<Screen> createScreen(@RequestBody Screen screen) {
-        return ResponseEntity.ok(screenService.createScreen(screen));
+    public ResponseEntity<ApiResponseDTO<ScreenDTO>> createScreen(@RequestBody Screen screen) {
+        ScreenDTO dto = ScreenMapper.toDTO(screenService.createScreen(screen));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen created successfully", dto));
     }
 
     @Operation(summary = "Update a screen", description = "Updates an existing screen by its ID")
@@ -39,10 +43,11 @@ public class ScreenController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Screen> updateScreen(
+    public ResponseEntity<ApiResponseDTO<ScreenDTO>> updateScreen(
             @Parameter(description = "ID of the screen to update") @PathVariable Long id,
             @RequestBody Screen screen) {
-        return ResponseEntity.ok(screenService.updateScreen(id, screen));
+        ScreenDTO dto = ScreenMapper.toDTO(screenService.updateScreen(id, screen));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen updated successfully", dto));
     }
 
     @Operation(summary = "Delete a screen", description = "Deletes a screen by its ID")
@@ -51,10 +56,10 @@ public class ScreenController {
             @ApiResponse(responseCode = "404", description = "Screen not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteScreen(
+    public ResponseEntity<ApiResponseDTO<Void>> deleteScreen(
             @Parameter(description = "ID of the screen to delete") @PathVariable Long id) {
         screenService.deleteScreen(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen deleted successfully", null));
     }
 
     @Operation(summary = "Get a screen by ID", description = "Returns a screen by its ID")
@@ -63,33 +68,36 @@ public class ScreenController {
             @ApiResponse(responseCode = "404", description = "Screen not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Screen> getScreenById(
+    public ResponseEntity<ApiResponseDTO<ScreenDTO>> getScreenById(
             @Parameter(description = "ID of the screen to retrieve") @PathVariable Long id) {
         return screenService.getScreenById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(screen -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen found", ScreenMapper.toDTO(screen))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Screen not found", null)));
     }
 
     @Operation(summary = "Get all screens", description = "Returns a list of all screens")
     @ApiResponse(responseCode = "200", description = "List of screens retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<Screen>> getAllScreens() {
-        return ResponseEntity.ok(screenService.getAllScreens());
+    public ResponseEntity<ApiResponseDTO<List<ScreenDTO>>> getAllScreens() {
+        List<ScreenDTO> dtos = screenService.getAllScreens().stream().map(ScreenMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of screens retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get active screens", description = "Returns a list of all active screens")
     @ApiResponse(responseCode = "200", description = "List of active screens retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<Screen>> getActiveScreens() {
-        return ResponseEntity.ok(screenService.getActiveScreens());
+    public ResponseEntity<ApiResponseDTO<List<ScreenDTO>>> getActiveScreens() {
+        List<ScreenDTO> dtos = screenService.getActiveScreens().stream().map(ScreenMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active screens retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get screens by theater", description = "Returns a list of screens for a specific theater")
     @ApiResponse(responseCode = "200", description = "List of theater's screens retrieved successfully")
     @GetMapping("/theater/{theaterId}")
-    public ResponseEntity<List<Screen>> getScreensByTheater(
+    public ResponseEntity<ApiResponseDTO<List<ScreenDTO>>> getScreensByTheater(
             @Parameter(description = "ID of the theater") @PathVariable Long theaterId) {
-        return ResponseEntity.ok(screenService.getScreensByTheater(theaterId));
+        List<ScreenDTO> dtos = screenService.getScreensByTheater(theaterId).stream().map(ScreenMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theater's screens retrieved successfully", dtos));
     }
 
     @Operation(summary = "Check if screen name exists", description = "Checks if a screen name is already taken in a theater")

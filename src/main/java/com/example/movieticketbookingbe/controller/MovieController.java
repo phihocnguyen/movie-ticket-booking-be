@@ -2,6 +2,9 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.Movie;
 import com.example.movieticketbookingbe.service.MovieService;
+import com.example.movieticketbookingbe.dto.MovieDTO;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.mapper.MovieMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,8 +31,9 @@ public class MovieController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        return ResponseEntity.ok(movieService.createMovie(movie));
+    public ResponseEntity<ApiResponseDTO<MovieDTO>> createMovie(@RequestBody Movie movie) {
+        MovieDTO dto = MovieMapper.toDTO(movieService.createMovie(movie));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie created successfully", dto));
     }
 
     @Operation(summary = "Update a movie", description = "Updates an existing movie by its ID")
@@ -39,10 +43,11 @@ public class MovieController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(
+    public ResponseEntity<ApiResponseDTO<MovieDTO>> updateMovie(
             @Parameter(description = "ID of the movie to update") @PathVariable Long id,
             @RequestBody Movie movie) {
-        return ResponseEntity.ok(movieService.updateMovie(id, movie));
+        MovieDTO dto = MovieMapper.toDTO(movieService.updateMovie(id, movie));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie updated successfully", dto));
     }
 
     @Operation(summary = "Delete a movie", description = "Deletes a movie by its ID")
@@ -51,10 +56,10 @@ public class MovieController {
             @ApiResponse(responseCode = "404", description = "Movie not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMovie(
+    public ResponseEntity<ApiResponseDTO<Void>> deleteMovie(
             @Parameter(description = "ID of the movie to delete") @PathVariable Long id) {
         movieService.deleteMovie(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie deleted successfully", null));
     }
 
     @Operation(summary = "Get a movie by ID", description = "Returns a movie by its ID")
@@ -63,48 +68,53 @@ public class MovieController {
             @ApiResponse(responseCode = "404", description = "Movie not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(
+    public ResponseEntity<ApiResponseDTO<MovieDTO>> getMovieById(
             @Parameter(description = "ID of the movie to retrieve") @PathVariable Long id) {
         return movieService.getMovieById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(movie -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie found", MovieMapper.toDTO(movie))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Movie not found", null)));
     }
 
     @Operation(summary = "Get all movies", description = "Returns a list of all movies")
     @ApiResponse(responseCode = "200", description = "List of movies retrieved successfully", content = @Content(schema = @Schema(implementation = Movie.class)))
     @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return ResponseEntity.ok(movieService.getAllMovies());
+    public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getAllMovies() {
+        List<MovieDTO> dtos = movieService.getAllMovies().stream().map(MovieMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of movies retrieved successfully", dtos));
     }
 
     @Operation(summary = "Search movies", description = "Search movies by title, genre, and language")
     @ApiResponse(responseCode = "200", description = "Search results retrieved successfully")
     @GetMapping("/search")
-    public ResponseEntity<List<Movie>> searchMovies(
+    public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> searchMovies(
             @Parameter(description = "Movie title to search for") @RequestParam(required = false) String title,
             @Parameter(description = "Movie genre to filter by") @RequestParam(required = false) String genre,
             @Parameter(description = "Movie language to filter by") @RequestParam(required = false) String language) {
-        return ResponseEntity.ok(movieService.searchMovies(title, genre, language));
+        List<MovieDTO> dtos = movieService.searchMovies(title, genre, language).stream().map(MovieMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Search results retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get random movies", description = "Returns 3 random movies")
     @ApiResponse(responseCode = "200", description = "Random movies retrieved successfully")
     @GetMapping("/random")
-    public ResponseEntity<List<Movie>> getRandomMovies() {
-        return ResponseEntity.ok(movieService.getRandomMovies());
+    public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getRandomMovies() {
+        List<MovieDTO> dtos = movieService.getRandomMovies().stream().map(MovieMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Random movies retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get latest movies", description = "Returns 10 latest movies")
     @ApiResponse(responseCode = "200", description = "Latest movies retrieved successfully")
     @GetMapping("/latest")
-    public ResponseEntity<List<Movie>> getLatestMovies() {
-        return ResponseEntity.ok(movieService.getLatestMovies());
+    public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getLatestMovies() {
+        List<MovieDTO> dtos = movieService.getLatestMovies().stream().map(MovieMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Latest movies retrieved successfully", dtos));
     }
 
     @Operation(summary = "Get top rated movies", description = "Returns 10 top rated movies")
     @ApiResponse(responseCode = "200", description = "Top rated movies retrieved successfully")
     @GetMapping("/top-rated")
-    public ResponseEntity<List<Movie>> getTopRatedMovies() {
-        return ResponseEntity.ok(movieService.getTopRatedMovies());
+    public ResponseEntity<ApiResponseDTO<List<MovieDTO>>> getTopRatedMovies() {
+        List<MovieDTO> dtos = movieService.getTopRatedMovies().stream().map(MovieMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Top rated movies retrieved successfully", dtos));
     }
 }
