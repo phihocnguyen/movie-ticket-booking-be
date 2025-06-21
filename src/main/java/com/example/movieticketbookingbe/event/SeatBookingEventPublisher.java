@@ -1,6 +1,6 @@
 package com.example.movieticketbookingbe.event;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class SeatBookingEventPublisher {
-    private final RedisTemplate<String, Object> redisTemplate;
-    private static final String SEAT_BOOKING_CHANNEL = "seat:booking:events";
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private static final String SEAT_BOOKING_TOPIC = "seat-booking-events";
 
     public void publishEvent(SeatBookingEvent event) {
         event.setTimestamp(LocalDateTime.now());
-        redisTemplate.convertAndSend(SEAT_BOOKING_CHANNEL, event);
+        kafkaTemplate.send(SEAT_BOOKING_TOPIC, event);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.movieticketbookingbe.event;
 
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.movieticketbookingbe.service.SeatLockService;
@@ -11,14 +10,14 @@ import lombok.RequiredArgsConstructor;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SeatBookingEventListener implements MessageListener {
+public class SeatBookingEventListener {
     private final ObjectMapper objectMapper;
     private final SeatLockService seatLockService;
 
-    @Override
-    public void onMessage(Message message, byte[] pattern) {
+    @KafkaListener(topics = "seat-booking-events", groupId = "seat-booking-group")
+    public void listen(String message) {
         try {
-            SeatBookingEvent event = objectMapper.readValue(message.getBody(), SeatBookingEvent.class);
+            SeatBookingEvent event = objectMapper.readValue(message, SeatBookingEvent.class);
             log.info("Received seat booking event: {}", event);
 
             switch (event.getEventType()) {
@@ -67,10 +66,8 @@ public class SeatBookingEventListener implements MessageListener {
 
     private void handleBookEvent(SeatBookingEvent event) {
         try {
-            // Verify the seat is still locked by this user before booking
             Long lockOwner = seatLockService.getLockOwner(event.getSeatId());
             if (lockOwner != null && lockOwner.equals(event.getUserId())) {
-                // Proceed with booking
                 log.info("Processing booking for seat {} by user {}", event.getSeatNumber(), event.getUserId());
                 // TODO: Add actual booking logic here
             } else {
