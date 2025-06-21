@@ -1,6 +1,8 @@
 package com.example.movieticketbookingbe.controller;
 
+import com.example.movieticketbookingbe.dto.response.ErrorResponse;
 import com.example.movieticketbookingbe.dto.response.StaffResponseDTO;
+import com.example.movieticketbookingbe.dto.response.SuccessResponse;
 import com.example.movieticketbookingbe.mapper.StaffMapper;
 import com.example.movieticketbookingbe.model.Staff;
 import com.example.movieticketbookingbe.model.User;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +33,7 @@ public class StaffController {
             @ApiResponse(responseCode = "200", description = "Staff member created successfully", content = @Content(schema = @Schema(implementation = Staff.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Staff> createStaff(@RequestBody Staff staff) {
         return ResponseEntity.ok(staffService.createStaff(staff));
     }
@@ -54,10 +57,9 @@ public class StaffController {
             @ApiResponse(responseCode = "404", description = "Staff member not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStaff(
-            @Parameter(description = "ID of the staff member to delete") @PathVariable Long id) {
+    public ResponseEntity<SuccessResponse> deleteStaff(@PathVariable Long id) {
         staffService.deleteStaff(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new SuccessResponse("Xóa nhân viên thành công."));
     }
 
     @Operation(summary = "Get a staff member by ID", description = "Returns a staff member by their ID")
@@ -83,7 +85,7 @@ public class StaffController {
     @Operation(summary = "Get active staff members", description = "Returns a list of all active staff members")
     @ApiResponse(responseCode = "200", description = "List of active staff members retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<StaffResponseDTO>> getActiveStaff() {
+    public ResponseEntity<?> getActiveStaff() {
         List<Staff> staffList = staffService.findByUserRoleAndUserIsActiveTrue(User.UserRole.THEATER_OWNER);
         List<StaffResponseDTO> dtoList = staffList.stream()
                 .map(StaffMapper::toDTO)
