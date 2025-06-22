@@ -1,8 +1,7 @@
 package com.example.movieticketbookingbe.controller;
-
-import com.example.movieticketbookingbe.dto.StaffDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.dto.staff.StaffCreateDTO;
+import com.example.movieticketbookingbe.dto.staff.StaffDTO;
 import com.example.movieticketbookingbe.mapper.StaffMapper;
 import com.example.movieticketbookingbe.model.Staff;
 import com.example.movieticketbookingbe.model.User;

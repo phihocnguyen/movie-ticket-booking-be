@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.time.LocalDate;
 
@@ -12,5 +13,6 @@ public class UserCreateDTO {
     private String role;
     private String username;
     private String fullName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 } 

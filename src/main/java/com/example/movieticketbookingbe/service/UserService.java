@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.service;
 
+import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
 import com.example.movieticketbookingbe.model.User;
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +8,7 @@ import java.util.Optional;
 public interface UserService {
     User createUser(User user);
 
-    User updateUser(Long id, User user);
+    User updateUser(Long id, UserCreateDTO user);
 
     void deleteUser(Long id);
 
@@ -17,9 +18,8 @@ public interface UserService {
 
     Optional<User> getUserByPhoneNumber(String phoneNumber);
 
-    List<User> getAllUsers();
 
-    List<User> getActiveUsers();
+    List<User> getAllCustomers(User.UserRole role);
 
     boolean existsByEmail(String email);
 

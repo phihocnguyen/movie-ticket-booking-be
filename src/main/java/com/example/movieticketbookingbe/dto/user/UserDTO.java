@@ -1,4 +1,4 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.user;
 
 import lombok.Data;
 import java.time.LocalDate;
@@ -17,4 +17,4 @@ public class UserDTO {
     private LocalDate dateOfBirth;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-} 
+}

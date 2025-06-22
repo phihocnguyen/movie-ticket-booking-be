@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.repository;
 
+import com.example.movieticketbookingbe.model.Staff;
 import com.example.movieticketbookingbe.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsername(String username);
 
-    List<User> findByIsActiveTrue();
+//    List<User> findByIsActiveTrue();
+    List<User> findByRoleAndIsActiveTrue(User.UserRole role);
 }

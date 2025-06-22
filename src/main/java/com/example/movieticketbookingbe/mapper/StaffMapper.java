@@ -1,7 +1,7 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.StaffDTO;
 import com.example.movieticketbookingbe.dto.staff.StaffCreateDTO;
+import com.example.movieticketbookingbe.dto.staff.StaffDTO;
 import com.example.movieticketbookingbe.model.Staff;
 
 public class StaffMapper {

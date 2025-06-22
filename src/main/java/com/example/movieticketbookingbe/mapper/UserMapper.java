@@ -1,7 +1,6 @@
 package com.example.movieticketbookingbe.mapper;
-
-import com.example.movieticketbookingbe.dto.UserDTO;
 import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
+import com.example.movieticketbookingbe.dto.user.UserDTO;
 import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.model.User.UserRole;
 

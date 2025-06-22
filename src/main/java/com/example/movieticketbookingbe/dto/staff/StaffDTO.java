@@ -1,4 +1,4 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.staff;
 
 import lombok.Data;
 import java.time.LocalDateTime;

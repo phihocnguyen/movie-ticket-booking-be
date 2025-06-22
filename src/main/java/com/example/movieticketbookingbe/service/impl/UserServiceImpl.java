@@ -1,5 +1,7 @@
 package com.example.movieticketbookingbe.service.impl;
 
+import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
+import com.example.movieticketbookingbe.mapper.UserMapper;
 import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.repository.UserRepository;
 import com.example.movieticketbookingbe.service.UserService;
@@ -22,11 +24,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User user) {
+    public User updateUser(Long id, UserCreateDTO userDTO) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setId(existingUser.getId());
-        return userRepository.save(user);
+
+        existingUser.setName(userDTO.getName());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setPhoneNumber(userDTO.getPhoneNumber());
+        existingUser.setUsername(userDTO.getUsername());
+        existingUser.setFullName(userDTO.getFullName());
+        existingUser.setDateOfBirth(userDTO.getDateOfBirth());
+
+        // 👇 Chỉ update password nếu được gửi lên
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
+            existingUser.setPassword(userDTO.getPassword());
+        }
+
+        // 👇 Chỉ update role nếu được gửi lên
+        if (userDTO.getRole() != null && !userDTO.getRole().isBlank()) {
+            existingUser.setRole(User.UserRole.valueOf(userDTO.getRole().toUpperCase()));
+        }
+
+        return userRepository.save(existingUser);
     }
 
     @Override
@@ -52,16 +71,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getActiveUsers() {
-        return userRepository.findByIsActiveTrue();
+    public List<User> getAllCustomers(User.UserRole role) {
+        return userRepository.findByRoleAndIsActiveTrue(role);
     }
 
     @Override
