@@ -1,9 +1,9 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.ScreenDTO;
+import com.example.movieticketbookingbe.dto.screen.ScreenDTO;
 import com.example.movieticketbookingbe.dto.screen.ScreenCreateDTO;
 import com.example.movieticketbookingbe.model.Screen;
-import com.example.movieticketbookingbe.dto.TheaterDTO;
+import com.example.movieticketbookingbe.dto.theater.TheaterDTO;
 
 public class ScreenMapper {
     public static ScreenDTO toDTO(Screen screen) {
@@ -11,12 +11,7 @@ public class ScreenMapper {
         ScreenDTO dto = new ScreenDTO();
         dto.setId(screen.getId());
         dto.setScreenName(screen.getScreenName());
-        dto.setScreenType(screen.getScreenType());
         dto.setTotalSeats(screen.getTotalSeats());
-        dto.setIsActive(screen.getIsActive());
-        dto.setTheaterId(screen.getTheaterId());
-        dto.setCreatedAt(screen.getCreatedAt());
-        dto.setUpdatedAt(screen.getUpdatedAt());
         dto.setTheater(screen.getTheater() != null ? TheaterMapper.toDTO(screen.getTheater()) : null);
         return dto;
     }

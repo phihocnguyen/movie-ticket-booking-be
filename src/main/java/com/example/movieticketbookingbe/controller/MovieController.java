@@ -2,7 +2,7 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.Movie;
 import com.example.movieticketbookingbe.service.MovieService;
-import com.example.movieticketbookingbe.dto.MovieDTO;
+import com.example.movieticketbookingbe.dto.movie.MovieDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.MovieMapper;
 import com.example.movieticketbookingbe.dto.movie.MovieCreateDTO;

@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.SeatType;
 import com.example.movieticketbookingbe.repository.SeatTypeRepository;
 import com.example.movieticketbookingbe.service.SeatTypeService;
+import com.example.movieticketbookingbe.dto.seattype.SeatTypePatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +76,7 @@ public class SeatTypeServiceImpl implements SeatTypeService {
         SeatType seatType = seatTypeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("SeatType not found"));
         if (patchDTO.getName() != null) seatType.setName(patchDTO.getName());
-        if (patchDTO.getPrice() != null) seatType.setPrice(patchDTO.getPrice());
+        if (patchDTO.getPrice() != null) seatType.setPriceMultiplier(patchDTO.getPrice().doubleValue());
         if (patchDTO.getIsActive() != null) seatType.setIsActive(patchDTO.getIsActive());
         return seatTypeRepository.save(seatType);
     }

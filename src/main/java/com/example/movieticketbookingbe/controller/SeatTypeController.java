@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.movieticketbookingbe.dto.seattype.SeatTypeCreateDTO;
-import com.example.movieticketbookingbe.dto.SeatTypeDTO;
+import com.example.movieticketbookingbe.dto.seattype.SeatTypeDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.SeatTypeMapper;
 import com.example.movieticketbookingbe.dto.seattype.SeatTypePatchDTO;
@@ -60,7 +60,8 @@ public class SeatTypeController {
     }
 
     @GetMapping("/check-name")
-    public ResponseEntity<Boolean> checkNameExists(@RequestParam String name) {
-        return ResponseEntity.ok(seatTypeService.existsByName(name));
+    public ResponseEntity<ApiResponseDTO<Boolean>> checkNameExists(@RequestParam String name) {
+        boolean exists = seatTypeService.existsByName(name);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Seat type name check completed successfully", exists));
     }
 }

@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.Payment;
 import com.example.movieticketbookingbe.repository.PaymentRepository;
 import com.example.movieticketbookingbe.service.PaymentService;
+import com.example.movieticketbookingbe.dto.payment.PaymentPatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment completePayment(Long id) {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
-        payment.setStatus(Payment.PaymentStatus.COMPLETED);
+        payment.setStatus(Payment.PaymentStatus.COMPLETED.name());
         return paymentRepository.save(payment);
     }
 
@@ -65,7 +66,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment failPayment(Long id) {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
-        payment.setStatus(Payment.PaymentStatus.FAILED);
+        payment.setStatus(Payment.PaymentStatus.FAILED.name());
         return paymentRepository.save(payment);
     }
 
@@ -73,7 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment refundPayment(Long id) {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
-        payment.setStatus(Payment.PaymentStatus.REFUNDED);
+        payment.setStatus(Payment.PaymentStatus.REFUNDED.name());
         return paymentRepository.save(payment);
     }
 
@@ -84,10 +85,10 @@ public class PaymentServiceImpl implements PaymentService {
         if (patchDTO.getBookingId() != null) {
             // TODO: set booking entity nếu cần
         }
-        if (patchDTO.getAmount() != null) payment.setAmount(patchDTO.getAmount());
-        if (patchDTO.getMethod() != null) payment.setMethod(patchDTO.getMethod());
+        if (patchDTO.getAmount() != null) payment.setAmount(Double.valueOf(patchDTO.getAmount()));
+        if (patchDTO.getMethod() != null) payment.setPaymentMethod(Payment.PaymentMethod.valueOf(patchDTO.getMethod()));
         if (patchDTO.getStatus() != null) payment.setStatus(patchDTO.getStatus());
-        if (patchDTO.getPaymentTime() != null) payment.setPaymentTime(patchDTO.getPaymentTime());
+        if (patchDTO.getPaymentTime() != null) payment.setCreatedAt(patchDTO.getPaymentTime());
         if (patchDTO.getIsActive() != null) payment.setIsActive(patchDTO.getIsActive());
         return paymentRepository.save(payment);
     }

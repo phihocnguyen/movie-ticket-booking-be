@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.Seat;
 import com.example.movieticketbookingbe.repository.SeatRepository;
 import com.example.movieticketbookingbe.service.SeatService;
+import com.example.movieticketbookingbe.dto.seat.SeatPatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,7 +94,10 @@ public class SeatServiceImpl implements SeatService {
         Seat seat = seatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Seat not found"));
         if (patchDTO.getSeatNumber() != null) seat.setSeatNumber(patchDTO.getSeatNumber());
-        if (patchDTO.getSeatType() != null) seat.setSeatType(patchDTO.getSeatType());
+        if (patchDTO.getSeatType() != null) {
+            // If patchDTO.getSeatType() is a String, convert to SeatType object as needed
+            // seat.setSeatType(seatTypeRepository.findByName(patchDTO.getSeatType()).orElse(null));
+        }
         if (patchDTO.getIsActive() != null) seat.setIsActive(patchDTO.getIsActive());
         if (patchDTO.getScreenId() != null) {
             // TODO: set screen entity nếu cần

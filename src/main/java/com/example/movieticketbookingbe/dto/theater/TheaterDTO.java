@@ -1,5 +1,6 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.theater;
 
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,4 +22,5 @@ public class TheaterDTO {
     private Integer totalScreens;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private TheaterOwnerDTO theaterOwner;
 } 

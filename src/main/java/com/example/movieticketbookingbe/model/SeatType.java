@@ -34,4 +34,8 @@ public class SeatType {
     @OneToMany(mappedBy = "seatType")
     @JsonIgnore
     private List<Seat> seats;
+
+    public void setPrice(Float price) {
+        this.priceMultiplier = price.doubleValue();
+    }
 }

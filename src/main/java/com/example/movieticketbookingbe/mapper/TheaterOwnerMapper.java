@@ -10,7 +10,7 @@ public class TheaterOwnerMapper {
         if (owner == null) return null;
         TheaterOwnerDTO dto = new TheaterOwnerDTO();
         dto.setId(owner.getId());
-        dto.setUser(owner.getUser() != null ? com.example.movieticketbookingbe.mapper.UserMapper.toDTO(owner.getUser()) : null);
+        dto.setUser(com.example.movieticketbookingbe.mapper.UserMapper.toBasicDTO(owner.getUser()));
         dto.setIsActive(owner.getIsActive());
         dto.setCreatedAt(owner.getCreatedAt());
         dto.setUpdatedAt(owner.getUpdatedAt());

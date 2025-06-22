@@ -1,4 +1,4 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.booking;
 
 import com.example.movieticketbookingbe.model.Booking.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;

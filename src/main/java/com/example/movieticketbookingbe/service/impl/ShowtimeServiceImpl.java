@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.*;
 import com.example.movieticketbookingbe.repository.*;
 import com.example.movieticketbookingbe.service.ShowtimeService;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimePatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,7 +164,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 .orElseThrow(() -> new RuntimeException("Showtime not found"));
         if (patchDTO.getStartTime() != null) showtime.setStartTime(patchDTO.getStartTime());
         if (patchDTO.getEndTime() != null) showtime.setEndTime(patchDTO.getEndTime());
-        if (patchDTO.getPrice() != null) showtime.setPrice(patchDTO.getPrice());
+        if (patchDTO.getPrice() != null) showtime.setPrice(Double.valueOf(patchDTO.getPrice()));
         if (patchDTO.getIsActive() != null) showtime.setIsActive(patchDTO.getIsActive());
         if (patchDTO.getMovieId() != null) {
             // TODO: set movie entity nếu cần

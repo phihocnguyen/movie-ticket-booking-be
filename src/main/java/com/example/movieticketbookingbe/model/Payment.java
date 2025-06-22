@@ -30,9 +30,8 @@ public class Payment {
     @Column(nullable = false)
     private PaymentMethod paymentMethod;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status;
+    private String status;
 
     @Column
     private String transactionId;
@@ -59,5 +58,21 @@ public class Payment {
         COMPLETED,
         FAILED,
         REFUNDED
+    }
+
+    public void setMethod(String method) {
+        this.paymentMethod = PaymentMethod.valueOf(method);
+    }
+
+    public void setPaymentTime(LocalDateTime paymentTime) {
+        this.createdAt = paymentTime;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Object getUser() {
+        return null;
     }
 }

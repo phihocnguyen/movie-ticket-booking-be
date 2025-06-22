@@ -1,6 +1,6 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.TheaterDTO;
+import com.example.movieticketbookingbe.dto.theater.TheaterDTO;
 import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
@@ -24,7 +24,13 @@ public class TheaterMapper {
         dto.setTotalScreens(theater.getTotalScreens());
         dto.setCreatedAt(theater.getCreatedAt());
         dto.setUpdatedAt(theater.getUpdatedAt());
-        dto.setTheaterOwner(theater.getTheaterOwner() != null ? com.example.movieticketbookingbe.mapper.TheaterOwnerMapper.toDTO(theater.getTheaterOwner()) : null);
+        if (theater.getTheaterOwner() != null &&
+            theater.getTheaterOwner().getUser() != null &&
+            theater.getTheaterOwner().getUser().getRole() == com.example.movieticketbookingbe.model.User.UserRole.THEATER_OWNER) {
+            dto.setTheaterOwner(com.example.movieticketbookingbe.mapper.TheaterOwnerMapper.toDTO(theater.getTheaterOwner()));
+        } else {
+            dto.setTheaterOwner(null);
+        }
         return dto;
     }
 

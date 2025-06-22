@@ -1,4 +1,4 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.seattype;
 
 import lombok.Data;
 

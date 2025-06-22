@@ -57,4 +57,8 @@ public class Screen {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public void setCapacity(Integer capacity) {
+        this.totalSeats = capacity;
+    }
 }

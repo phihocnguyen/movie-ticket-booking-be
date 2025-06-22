@@ -1,6 +1,6 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.MovieDTO;
+import com.example.movieticketbookingbe.dto.movie.MovieDTO;
 import com.example.movieticketbookingbe.model.Movie;
 import com.example.movieticketbookingbe.dto.movie.MovieCreateDTO;
 import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
@@ -12,22 +12,16 @@ public class MovieMapper {
         MovieDTO dto = new MovieDTO();
         dto.setId(movie.getId());
         dto.setTitle(movie.getTitle());
-        dto.setTitleVi(movie.getTitleVi());
         dto.setDescription(movie.getDescription());
-        dto.setDuration(movie.getDuration());
-        dto.setLanguage(movie.getLanguage());
-        dto.setGenre(movie.getGenre());
-        dto.setReleaseDate(movie.getReleaseDate());
-        dto.setPosterUrl(movie.getPosterUrl());
-        dto.setBackdropUrl(movie.getBackdropUrl());
-        dto.setTrailerUrl(movie.getTrailerUrl());
         dto.setDirector(movie.getDirector());
         dto.setActor(movie.getActor());
-        dto.setRating(movie.getRating());
+        dto.setReleaseDate(movie.getReleaseDate());
+        dto.setDuration(movie.getDuration());
+        dto.setGenre(movie.getGenre());
+        dto.setLanguage(movie.getLanguage());
         dto.setCountry(movie.getCountry());
+        dto.setPosterUrl(movie.getPosterUrl());
         dto.setIsActive(movie.getIsActive());
-        dto.setCreatedAt(movie.getCreatedAt());
-        dto.setUpdatedAt(movie.getUpdatedAt());
         dto.setShowtimes(movie.getShowtimes() != null ? movie.getShowtimes().stream().map(ShowtimeMapper::toDTO).collect(Collectors.toList()) : null);
         return dto;
     }

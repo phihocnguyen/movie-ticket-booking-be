@@ -1,5 +1,4 @@
 package com.example.movieticketbookingbe.controller;
-import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerCreateDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerPatchDTO;
@@ -19,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 
 @RestController
 @RequestMapping("/api/theater-owner")
@@ -49,10 +49,10 @@ public class TheaterOwnerController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<TheaterOwnerDTO> patchTheaterOwner(
+    public ResponseEntity<ApiResponseDTO<TheaterOwnerDTO>> patchTheaterOwner(
             @Parameter(description = "ID of the theater owner to update") @PathVariable Long id,
             @RequestBody TheaterOwnerPatchDTO patchDTO) {
-        return ResponseEntity.ok(TheaterOwnerMapper.toDTO(theaterOwnerService.patchTheaterOwner(id, patchDTO)));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater owner updated successfully", TheaterOwnerMapper.toDTO(theaterOwnerService.patchTheaterOwner(id, patchDTO))));
     }
 
     @Operation(summary = "Delete a theater owner", description = "Deletes a theater owner by their ID")
@@ -61,10 +61,10 @@ public class TheaterOwnerController {
             @ApiResponse(responseCode = "404", description = "Theater owner not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTheaterOwner(
+    public ResponseEntity<ApiResponseDTO<Void>> deleteTheaterOwner(
             @Parameter(description = "ID of the theater owner to delete") @PathVariable Long id) {
         theaterOwnerService.deleteTheaterOwner(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater owner deleted successfully", null));
     }
 
     @Operation(summary = "Get a theater owner by ID", description = "Returns a theater owner by their ID")
@@ -73,27 +73,27 @@ public class TheaterOwnerController {
             @ApiResponse(responseCode = "404", description = "Theater owner not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<TheaterOwnerDTO> getTheaterOwnerById(
+    public ResponseEntity<ApiResponseDTO<TheaterOwnerDTO>> getTheaterOwnerById(
             @Parameter(description = "ID of the theater owner to retrieve") @PathVariable Long id) {
         return theaterOwnerService.getTheaterOwnerById(id)
-                .map(owner -> ResponseEntity.ok(TheaterOwnerMapper.toDTO(owner)))
+                .map(owner -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater owner found", TheaterOwnerMapper.toDTO(owner))))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Get all theater owners", description = "Returns a list of all theater owners")
     @ApiResponse(responseCode = "200", description = "List of theater owners retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<TheaterOwnerDTO>> getAllTheaterOwners() {
+    public ResponseEntity<ApiResponseDTO<List<TheaterOwnerDTO>>> getAllTheaterOwners() {
         List<TheaterOwnerDTO> dtoList = theaterOwnerService.getAllTheaterOwners().stream().map(TheaterOwnerMapper::toDTO).toList();
-        return ResponseEntity.ok(dtoList);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theater owners retrieved successfully", dtoList));
     }
 
     @Operation(summary = "Get active theater owners", description = "Returns a list of all active theater owners")
     @ApiResponse(responseCode = "200", description = "List of active theater owners retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<List<TheaterOwnerDTO>> getActiveTheaterOwners() {
+    public ResponseEntity<ApiResponseDTO<List<TheaterOwnerDTO>>> getActiveTheaterOwners() {
         List<TheaterOwnerDTO> dtoList = theaterOwnerService.getActiveTheaterOwners().stream().map(TheaterOwnerMapper::toDTO).toList();
-        return ResponseEntity.ok(dtoList);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active theater owners retrieved successfully", dtoList));
     }
 
     @Operation(summary = "Get theater owner by user", description = "Returns a theater owner associated with a specific user")
@@ -102,10 +102,10 @@ public class TheaterOwnerController {
             @ApiResponse(responseCode = "404", description = "Theater owner not found")
     })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<TheaterOwnerDTO> getTheaterOwnerByUser(
+    public ResponseEntity<ApiResponseDTO<TheaterOwnerDTO>> getTheaterOwnerByUser(
             @Parameter(description = "ID of the user") @PathVariable Long userId) {
         return theaterOwnerService.getTheaterOwnerByUser(userId)
-                .map(owner -> ResponseEntity.ok(TheaterOwnerMapper.toDTO(owner)))
+                .map(owner -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater owner found", TheaterOwnerMapper.toDTO(owner))))
                 .orElse(ResponseEntity.notFound().build());
     }
 

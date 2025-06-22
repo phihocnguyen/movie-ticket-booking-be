@@ -1,3 +1,5 @@
+package com.example.movieticketbookingbe.service;
+
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerWithUserCreateDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerPatchDTO;

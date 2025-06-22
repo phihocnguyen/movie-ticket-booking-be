@@ -1,10 +1,6 @@
 package com.example.movieticketbookingbe.controller;
 
-import com.example.movieticketbookingbe.dto.staff.StaffDTO;
 import com.example.movieticketbookingbe.dto.user.UserDTO;
-import com.example.movieticketbookingbe.mapper.StaffMapper;
-import com.example.movieticketbookingbe.model.Staff;
-import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.service.UserService;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.UserMapper;
@@ -20,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.movieticketbookingbe.model.User;
 
 import java.util.List;
 
@@ -96,24 +93,24 @@ public class UserController {
     @Operation(summary = "Check if email exists", description = "Checks if an email address is already registered")
     @ApiResponse(responseCode = "200", description = "Email check completed successfully")
     @GetMapping("/check-email")
-    public ResponseEntity<Boolean> checkEmailExists(
+    public ResponseEntity<ApiResponseDTO<Boolean>> checkEmailExists(
             @Parameter(description = "Email address to check") @RequestParam String email) {
-        return ResponseEntity.ok(userService.existsByEmail(email));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Email check completed successfully", userService.existsByEmail(email)));
     }
 
     @Operation(summary = "Check if phone number exists", description = "Checks if a phone number is already registered")
     @ApiResponse(responseCode = "200", description = "Phone number check completed successfully")
     @GetMapping("/check-phone")
-    public ResponseEntity<Boolean> checkPhoneExists(
+    public ResponseEntity<ApiResponseDTO<Boolean>> checkPhoneExists(
             @Parameter(description = "Phone number to check") @RequestParam String phoneNumber) {
-        return ResponseEntity.ok(userService.existsByPhoneNumber(phoneNumber));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Phone number check completed successfully", userService.existsByPhoneNumber(phoneNumber)));
     }
 
     @Operation(summary = "Check if username exists", description = "Checks if a username is already taken")
     @ApiResponse(responseCode = "200", description = "Username check completed successfully")
     @GetMapping("/check-username")
-    public ResponseEntity<Boolean> checkUsernameExists(
+    public ResponseEntity<ApiResponseDTO<Boolean>> checkUsernameExists(
             @Parameter(description = "Username to check") @RequestParam String username) {
-        return ResponseEntity.ok(userService.existsByUsername(username));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Username check completed successfully", userService.existsByUsername(username)));
     }
 }

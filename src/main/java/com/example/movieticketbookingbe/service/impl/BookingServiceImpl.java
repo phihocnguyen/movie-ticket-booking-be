@@ -1,7 +1,7 @@
 package com.example.movieticketbookingbe.service.impl;
 
-import com.example.movieticketbookingbe.dto.BookingRequestDTO;
-import com.example.movieticketbookingbe.dto.BookingPatchDTO;
+import com.example.movieticketbookingbe.dto.booking.BookingRequestDTO;
+import com.example.movieticketbookingbe.dto.booking.BookingPatchDTO;
 import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Seat;
 import com.example.movieticketbookingbe.model.TheaterFoodInventory;
@@ -171,7 +171,7 @@ public class BookingServiceImpl implements BookingService {
         if (patchDTO.getUserId() != null) {
             // TODO: set user entity nếu cần
         }
-        if (patchDTO.getTotalPrice() != null) booking.setTotalPrice(patchDTO.getTotalPrice());
+        if (patchDTO.getTotalPrice() != null) booking.setTotalAmount(Double.valueOf(patchDTO.getTotalPrice()));
         if (patchDTO.getPaymentMethod() != null) booking.setPaymentMethod(patchDTO.getPaymentMethod());
         if (patchDTO.getNote() != null) booking.setNote(patchDTO.getNote());
         if (patchDTO.getIsActive() != null) booking.setIsActive(patchDTO.getIsActive());

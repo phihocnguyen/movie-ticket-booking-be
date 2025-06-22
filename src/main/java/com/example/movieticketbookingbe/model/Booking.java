@@ -67,6 +67,9 @@ public class Booking {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    private String note;
+    private String paymentMethod;
+
     @Embeddable
     @Data
     @NoArgsConstructor
@@ -125,5 +128,25 @@ public class Booking {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public Showtime getShowtime() {
         return showtime;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalAmount = totalPrice;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Object getUser() {
+        return null;
+    }
+
+    public Object getSeat() {
+        return null;
     }
 }

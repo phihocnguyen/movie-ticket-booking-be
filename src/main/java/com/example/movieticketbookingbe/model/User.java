@@ -64,7 +64,6 @@ public class User implements UserDetails {
     public enum UserRole {
         ADMIN,
         THEATER_OWNER,
-        STAFF,
         CUSTOMER
     }
 
@@ -91,5 +90,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isActive;
+    }
+
+    public void setAddress(String address) {
+        // No address field, stub for compatibility
+    }
+
+    public Object getPayments() {
+        return null;
     }
 }

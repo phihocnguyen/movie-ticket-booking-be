@@ -57,4 +57,8 @@ public class TheaterFoodInventory {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public String getFoodName() {
+        return this.name;
+    }
 }

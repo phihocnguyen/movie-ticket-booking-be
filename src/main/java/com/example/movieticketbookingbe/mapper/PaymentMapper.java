@@ -14,10 +14,8 @@ public class PaymentMapper {
         PaymentDTO dto = new PaymentDTO();
         dto.setId(payment.getId());
         dto.setBooking(payment.getBooking() != null ? BookingMapper.toDTO(payment.getBooking()) : null);
-        dto.setUser(payment.getUser() != null ? UserMapper.toDTO(payment.getUser()) : null);
         dto.setAmount(payment.getAmount());
         dto.setStatus(payment.getStatus());
-        dto.setPaymentTime(payment.getPaymentTime());
         dto.setCreatedAt(payment.getCreatedAt());
         dto.setUpdatedAt(payment.getUpdatedAt());
         return dto;
@@ -29,7 +27,7 @@ public class PaymentMapper {
         // payment.setBooking cần set ở service nếu cần
         payment.setAmount(dto.getAmount());
         payment.setPaymentMethod(dto.getPaymentMethod() != null ? PaymentMethod.valueOf(dto.getPaymentMethod()) : null);
-        payment.setStatus(dto.getStatus() != null ? PaymentStatus.valueOf(dto.getStatus()) : null);
+        payment.setStatus(dto.getStatus());
         payment.setTransactionId(dto.getTransactionId());
         payment.setIsActive(dto.getIsActive());
         return payment;

@@ -21,7 +21,6 @@ public class UserMapper {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         dto.setBookings(user.getBookings() != null ? user.getBookings().stream().map(BookingMapper::toDTO).collect(Collectors.toList()) : null);
-        dto.setPayments(user.getPayments() != null ? user.getPayments().stream().map(PaymentMapper::toDTO).collect(Collectors.toList()) : null);
         return dto;
     }
 
@@ -38,5 +37,22 @@ public class UserMapper {
         user.setDateOfBirth(dto.getDateOfBirth());
         user.setIsActive(true);
         return user;
+    }
+
+    public static UserDTO toBasicDTO(User user) {
+        if (user == null) return null;
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setRole(user.getRole() != null ? user.getRole().name() : null);
+        dto.setIsActive(user.getIsActive());
+        dto.setUsername(user.getUsername());
+        dto.setFullName(user.getFullName());
+        dto.setDateOfBirth(user.getDateOfBirth());
+        dto.setCreatedAt(user.getCreatedAt());
+        dto.setUpdatedAt(user.getUpdatedAt());
+        return dto;
     }
 } 

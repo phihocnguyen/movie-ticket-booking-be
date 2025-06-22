@@ -1,9 +1,9 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.TheaterFoodInventoryDTO;
+import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInventoryDTO;
 import com.example.movieticketbookingbe.model.TheaterFoodInventory;
+import com.example.movieticketbookingbe.dto.theater.TheaterDTO;
 import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInventoryCreateDTO;
-import com.example.movieticketbookingbe.dto.TheaterDTO;
 
 public class TheaterFoodInventoryMapper {
     public static TheaterFoodInventoryDTO toDTO(TheaterFoodInventory entity) {

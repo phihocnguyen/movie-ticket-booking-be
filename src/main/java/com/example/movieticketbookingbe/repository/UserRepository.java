@@ -1,6 +1,5 @@
 package com.example.movieticketbookingbe.repository;
 
-import com.example.movieticketbookingbe.model.Staff;
 import com.example.movieticketbookingbe.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

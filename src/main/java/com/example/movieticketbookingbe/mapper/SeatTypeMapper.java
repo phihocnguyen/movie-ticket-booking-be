@@ -1,8 +1,8 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.SeatTypeDTO;
-import com.example.movieticketbookingbe.model.SeatType;
+import com.example.movieticketbookingbe.dto.seattype.SeatTypeDTO;
 import com.example.movieticketbookingbe.dto.seattype.SeatTypeCreateDTO;
+import com.example.movieticketbookingbe.model.SeatType;
 
 public class SeatTypeMapper {
     public static SeatTypeDTO toDTO(SeatType seatType) {

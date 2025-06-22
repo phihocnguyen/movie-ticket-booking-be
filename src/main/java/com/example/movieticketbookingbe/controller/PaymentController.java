@@ -2,7 +2,7 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.Payment;
 import com.example.movieticketbookingbe.service.PaymentService;
-import com.example.movieticketbookingbe.dto.PaymentDTO;
+import com.example.movieticketbookingbe.dto.payment.PaymentDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.PaymentMapper;
 import com.example.movieticketbookingbe.dto.payment.PaymentCreateDTO;
@@ -101,9 +101,10 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     @PutMapping("/{id}/complete")
-    public ResponseEntity<Payment> completePayment(
+    public ResponseEntity<ApiResponseDTO<Payment>> completePayment(
             @Parameter(description = "ID of the payment to complete") @PathVariable Long id) {
-        return ResponseEntity.ok(paymentService.completePayment(id));
+        Payment payment = paymentService.completePayment(id);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment completed successfully", payment));
     }
 
     @Operation(summary = "Fail a payment", description = "Marks a payment as failed")
@@ -112,9 +113,10 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     @PutMapping("/{id}/fail")
-    public ResponseEntity<Payment> failPayment(
+    public ResponseEntity<ApiResponseDTO<Payment>> failPayment(
             @Parameter(description = "ID of the payment to fail") @PathVariable Long id) {
-        return ResponseEntity.ok(paymentService.failPayment(id));
+        Payment payment = paymentService.failPayment(id);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment marked as failed successfully", payment));
     }
 
     @Operation(summary = "Refund a payment", description = "Processes a refund for a payment")
@@ -123,8 +125,9 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     @PutMapping("/{id}/refund")
-    public ResponseEntity<Payment> refundPayment(
+    public ResponseEntity<ApiResponseDTO<Payment>> refundPayment(
             @Parameter(description = "ID of the payment to refund") @PathVariable Long id) {
-        return ResponseEntity.ok(paymentService.refundPayment(id));
+        Payment payment = paymentService.refundPayment(id);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment refunded successfully", payment));
     }
 }

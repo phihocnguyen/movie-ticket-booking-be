@@ -9,6 +9,7 @@ import com.example.movieticketbookingbe.repository.SeatRepository;
 import com.example.movieticketbookingbe.repository.SeatTypeRepository;
 import com.example.movieticketbookingbe.repository.TheaterRepository;
 import com.example.movieticketbookingbe.service.ScreenService;
+import com.example.movieticketbookingbe.dto.screen.ScreenPatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -191,7 +192,7 @@ public class ScreenServiceImpl implements ScreenService {
         Screen screen = screenRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Screen not found"));
         if (patchDTO.getScreenName() != null) screen.setScreenName(patchDTO.getScreenName());
-        if (patchDTO.getCapacity() != null) screen.setCapacity(patchDTO.getCapacity());
+        if (patchDTO.getCapacity() != null) screen.setTotalSeats(patchDTO.getCapacity());
         if (patchDTO.getIsActive() != null) screen.setIsActive(patchDTO.getIsActive());
         if (patchDTO.getTheaterId() != null) {
             // TODO: set theater entity nếu cần

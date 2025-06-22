@@ -2,10 +2,10 @@ package com.example.movieticketbookingbe.controller;
 
 import com.example.movieticketbookingbe.model.Showtime;
 import com.example.movieticketbookingbe.service.ShowtimeService;
-import com.example.movieticketbookingbe.dto.ShowtimeDTO;
-import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
 import com.example.movieticketbookingbe.dto.showtime.ShowtimePatchDTO;
 import com.example.movieticketbookingbe.mapper.ShowtimeMapper;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,44 +42,47 @@ public class ShowtimeController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<ShowtimeDTO>> getShowtimeById(@PathVariable Long id) {
         return showtimeService.getShowtimeById(id)
-                .map(showtime -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtime found", ShowtimeMapper.toDTO(showtime))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Showtime not found", null)));
+                .map(showtime -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtime retrieved successfully", ShowtimeMapper.toDTO(showtime))))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getAllShowtimes() {
         List<ShowtimeDTO> dtos = showtimeService.getAllShowtimes().stream().map(ShowtimeMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of showtimes retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
     }
 
     @GetMapping("/active")
     public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getActiveShowtimes() {
         List<ShowtimeDTO> dtos = showtimeService.getActiveShowtimes().stream().map(ShowtimeMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active showtimes retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Active showtimes retrieved successfully", dtos));
     }
 
     @GetMapping("/movie/{movieId}")
     public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getShowtimesByMovieId(@PathVariable Long movieId) {
         List<ShowtimeDTO> dtos = showtimeService.getShowtimesByMovieId(movieId).stream().map(ShowtimeMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of movie's showtimes retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
     }
 
     @GetMapping("/screen/{screenId}")
-    public ResponseEntity<List<Showtime>> getShowtimesByScreenId(@PathVariable Long screenId) {
-        return ResponseEntity.ok(showtimeService.getShowtimesByScreenId(screenId));
+    public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getShowtimesByScreenId(@PathVariable Long screenId) {
+        List<ShowtimeDTO> dtos = showtimeService.getShowtimesByScreenId(screenId).stream().map(ShowtimeMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
     }
 
     @GetMapping("/theater/{theaterId}")
-    public ResponseEntity<List<Showtime>> getShowtimesByTheaterId(@PathVariable Long theaterId) {
-        return ResponseEntity.ok(showtimeService.getShowtimesByTheaterId(theaterId));
+    public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getShowtimesByTheaterId(@PathVariable Long theaterId) {
+        List<ShowtimeDTO> dtos = showtimeService.getShowtimesByTheaterId(theaterId).stream().map(ShowtimeMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Showtime>> searchShowtimes(
+    public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> searchShowtimes(
             @RequestParam(required = false) Long movieId,
             @RequestParam(required = false) Long theaterId,
             @RequestParam(required = false) LocalDateTime startTime,
             @RequestParam(required = false) LocalDateTime endTime) {
-        return ResponseEntity.ok(showtimeService.searchShowtimes(movieId, theaterId, startTime, endTime));
+        List<ShowtimeDTO> dtos = showtimeService.searchShowtimes(movieId, theaterId, startTime, endTime).stream().map(ShowtimeMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
     }
 }

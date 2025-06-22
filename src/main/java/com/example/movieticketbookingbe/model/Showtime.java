@@ -65,6 +65,14 @@ public class Showtime {
     @JsonIgnore
     private List<Booking> bookings;
 
+    @Column(nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime updatedAt;
+
     @Transient
     @JsonInclude
     public String getMovieTitle() {
@@ -87,5 +95,13 @@ public class Showtime {
     @JsonInclude
     public String getTheaterAddress() {
         return theater != null ? theater.getAddress() : null;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

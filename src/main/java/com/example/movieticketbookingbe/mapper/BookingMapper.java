@@ -1,7 +1,7 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.BookingDTO;
-import com.example.movieticketbookingbe.dto.BookingRequestDTO;
+import com.example.movieticketbookingbe.dto.booking.BookingDTO;
+import com.example.movieticketbookingbe.dto.booking.BookingRequestDTO;
 import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Booking.BookingSeatInfo;
 import com.example.movieticketbookingbe.model.Booking.BookingFoodInfo;
@@ -16,11 +16,11 @@ public class BookingMapper {
         if (booking == null) return null;
         BookingDTO dto = new BookingDTO();
         dto.setId(booking.getId());
-        dto.setUser(booking.getUser() != null ? UserMapper.toDTO(booking.getUser()) : null);
+        // dto.setUser(booking.getUser() != null ? UserMapper.toDTO(booking.getUser()) : null);
         dto.setShowtime(booking.getShowtime() != null ? ShowtimeMapper.toDTO(booking.getShowtime()) : null);
-        dto.setSeat(booking.getSeat() != null ? SeatMapper.toDTO(booking.getSeat()) : null);
+        // dto.setSeat(booking.getSeat() != null ? SeatMapper.toDTO(booking.getSeat()) : null);
         dto.setPayment(booking.getPayment() != null ? PaymentMapper.toDTO(booking.getPayment()) : null);
-        dto.setStatus(booking.getStatus());
+        dto.setStatus(booking.getStatus() != null ? booking.getStatus().name() : null);
         dto.setBookingTime(booking.getBookingTime());
         dto.setCreatedAt(booking.getCreatedAt());
         dto.setUpdatedAt(booking.getUpdatedAt());

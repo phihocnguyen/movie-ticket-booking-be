@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.Movie;
 import com.example.movieticketbookingbe.repository.MovieRepository;
 import com.example.movieticketbookingbe.service.MovieService;
+import com.example.movieticketbookingbe.dto.movie.MoviePatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

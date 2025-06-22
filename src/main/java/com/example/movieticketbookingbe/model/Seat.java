@@ -49,4 +49,8 @@ public class Seat {
     public Double getPriceMultiplier() {
         return seatType != null ? seatType.getPriceMultiplier() : null;
     }
+
+    public Boolean getIsAvailable() {
+        return this.isActive;
+    }
 }

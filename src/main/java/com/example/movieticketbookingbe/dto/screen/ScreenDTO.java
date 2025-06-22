@@ -1,6 +1,6 @@
 package com.example.movieticketbookingbe.dto.screen;
 
-import com.example.movieticketbookingbe.dto.TheaterDTO;
+import com.example.movieticketbookingbe.dto.theater.TheaterDTO;
 import lombok.Data;
 import java.time.LocalDateTime;
 

@@ -1,13 +1,12 @@
 package com.example.movieticketbookingbe.controller;
 
-import com.example.movieticketbookingbe.dto.BookingRequestDTO;
+import com.example.movieticketbookingbe.dto.booking.BookingRequestDTO;
 import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Booking.BookingSeatInfo;
 import com.example.movieticketbookingbe.model.Booking.BookingFoodInfo;
 import com.example.movieticketbookingbe.service.BookingService;
-import com.example.movieticketbookingbe.dto.BookingDTO;
-import com.example.movieticketbookingbe.dto.ApiResponseDTO;
-import com.example.movieticketbookingbe.dto.BookingPatchDTO;
+import com.example.movieticketbookingbe.dto.booking.BookingDTO;
+import com.example.movieticketbookingbe.dto.booking.BookingPatchDTO;
 import com.example.movieticketbookingbe.mapper.BookingMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 
 @RestController
 @RequestMapping("/api/bookings")

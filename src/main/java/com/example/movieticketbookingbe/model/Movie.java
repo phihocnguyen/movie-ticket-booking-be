@@ -75,4 +75,8 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<Showtime> showtimes = new ArrayList<>();
+
+    public String getCast() {
+        return this.actor;
+    }
 }
