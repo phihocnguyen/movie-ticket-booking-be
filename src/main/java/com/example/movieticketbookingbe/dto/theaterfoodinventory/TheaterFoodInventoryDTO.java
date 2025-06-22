@@ -1,19 +1,21 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.theaterfoodinventory;
 
+import com.example.movieticketbookingbe.dto.TheaterDTO;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
 public class TheaterFoodInventoryDTO {
     private Long id;
-    private Long theaterId;
+    private String foodName;
+    private Integer quantity;
+    private Double price;
+    private TheaterDTO theater;
     private String name;
     private String description;
-    private Double price;
     private String imageUrl;
     private String category;
     private Integer preparationTime;
-    private Integer quantity;
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -3,6 +3,7 @@ import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
 import com.example.movieticketbookingbe.dto.user.UserDTO;
 import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.model.User.UserRole;
+import java.util.stream.Collectors;
 
 public class UserMapper {
     public static UserDTO toDTO(User user) {
@@ -19,6 +20,8 @@ public class UserMapper {
         dto.setDateOfBirth(user.getDateOfBirth());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
+        dto.setBookings(user.getBookings() != null ? user.getBookings().stream().map(BookingMapper::toDTO).collect(Collectors.toList()) : null);
+        dto.setPayments(user.getPayments() != null ? user.getPayments().stream().map(PaymentMapper::toDTO).collect(Collectors.toList()) : null);
         return dto;
     }
 

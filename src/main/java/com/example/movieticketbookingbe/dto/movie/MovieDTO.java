@@ -1,8 +1,10 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.movie;
 
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class MovieDTO {
@@ -24,4 +26,5 @@ public class MovieDTO {
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<ShowtimeDTO> showtimes;
 } 

@@ -3,6 +3,8 @@ package com.example.movieticketbookingbe.mapper;
 import com.example.movieticketbookingbe.dto.MovieDTO;
 import com.example.movieticketbookingbe.model.Movie;
 import com.example.movieticketbookingbe.dto.movie.MovieCreateDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
+import java.util.stream.Collectors;
 
 public class MovieMapper {
     public static MovieDTO toDTO(Movie movie) {
@@ -26,6 +28,7 @@ public class MovieMapper {
         dto.setIsActive(movie.getIsActive());
         dto.setCreatedAt(movie.getCreatedAt());
         dto.setUpdatedAt(movie.getUpdatedAt());
+        dto.setShowtimes(movie.getShowtimes() != null ? movie.getShowtimes().stream().map(ShowtimeMapper::toDTO).collect(Collectors.toList()) : null);
         return dto;
     }
 

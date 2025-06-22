@@ -1,5 +1,9 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.booking;
 
+import com.example.movieticketbookingbe.dto.user.UserDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
+import com.example.movieticketbookingbe.dto.seat.SeatDTO;
+import com.example.movieticketbookingbe.dto.payment.PaymentDTO;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,11 +11,13 @@ import java.util.List;
 @Data
 public class BookingDTO {
     private Long id;
-    private Long userId;
-    private Long showtimeId;
+    private UserDTO user;
+    private ShowtimeDTO showtime;
+    private SeatDTO seat;
+    private PaymentDTO payment;
+    private String status;
     private LocalDateTime bookingTime;
     private Double totalAmount;
-    private String status;
     private Boolean isActive;
     private List<BookingSeatInfoDTO> bookingSeats;
     private List<BookingFoodInfoDTO> bookingFoods;

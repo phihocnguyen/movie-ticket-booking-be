@@ -1,5 +1,6 @@
-package com.example.movieticketbookingbe.dto;
+package com.example.movieticketbookingbe.dto.screen;
 
+import com.example.movieticketbookingbe.dto.TheaterDTO;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -13,4 +14,5 @@ public class ScreenDTO {
     private Long theaterId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private TheaterDTO theater;
 } 

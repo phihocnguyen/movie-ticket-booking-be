@@ -3,6 +3,7 @@ import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerCreateDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerPatchDTO;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerWithUserCreateDTO;
 import com.example.movieticketbookingbe.mapper.TheaterOwnerMapper;
 import com.example.movieticketbookingbe.model.TheaterOwner;
 import com.example.movieticketbookingbe.service.TheaterOwnerService;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/api/theater-owner")
@@ -24,6 +26,9 @@ import java.util.List;
 @Tag(name = "TheaterOwner", description = "Theater owner management APIs")
 public class TheaterOwnerController {
     private final TheaterOwnerService theaterOwnerService;
+
+    @Autowired
+    private TheaterOwnerService theaterOwnerServiceImpl;
 
     @Operation(summary = "Create a new theater owner", description = "Creates a new theater owner with the provided information")
     @ApiResponses({
@@ -102,5 +107,10 @@ public class TheaterOwnerController {
         return theaterOwnerService.getTheaterOwnerByUser(userId)
                 .map(owner -> ResponseEntity.ok(TheaterOwnerMapper.toDTO(owner)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/with-user")
+    public TheaterOwnerDTO createTheaterOwnerWithUser(@RequestBody TheaterOwnerWithUserCreateDTO dto) {
+        return theaterOwnerServiceImpl.createTheaterOwnerWithUser(dto);
     }
 } 

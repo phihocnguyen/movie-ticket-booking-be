@@ -6,18 +6,22 @@ import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Booking.BookingSeatInfo;
 import com.example.movieticketbookingbe.model.Booking.BookingFoodInfo;
 import java.util.stream.Collectors;
+import com.example.movieticketbookingbe.dto.user.UserDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
+import com.example.movieticketbookingbe.dto.seat.SeatDTO;
+import com.example.movieticketbookingbe.dto.payment.PaymentDTO;
 
 public class BookingMapper {
     public static BookingDTO toDTO(Booking booking) {
         if (booking == null) return null;
         BookingDTO dto = new BookingDTO();
         dto.setId(booking.getId());
-        dto.setUserId(booking.getUserId());
-        dto.setShowtimeId(booking.getShowtimeId());
+        dto.setUser(booking.getUser() != null ? UserMapper.toDTO(booking.getUser()) : null);
+        dto.setShowtime(booking.getShowtime() != null ? ShowtimeMapper.toDTO(booking.getShowtime()) : null);
+        dto.setSeat(booking.getSeat() != null ? SeatMapper.toDTO(booking.getSeat()) : null);
+        dto.setPayment(booking.getPayment() != null ? PaymentMapper.toDTO(booking.getPayment()) : null);
+        dto.setStatus(booking.getStatus());
         dto.setBookingTime(booking.getBookingTime());
-        dto.setTotalAmount(booking.getTotalAmount());
-        dto.setStatus(booking.getStatus() != null ? booking.getStatus().name() : null);
-        dto.setIsActive(booking.getIsActive());
         dto.setCreatedAt(booking.getCreatedAt());
         dto.setUpdatedAt(booking.getUpdatedAt());
         if (booking.getBookingSeats() != null) {

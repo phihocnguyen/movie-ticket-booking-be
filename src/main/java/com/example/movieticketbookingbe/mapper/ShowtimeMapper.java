@@ -1,25 +1,23 @@
 package com.example.movieticketbookingbe.mapper;
 
-import com.example.movieticketbookingbe.dto.ShowtimeDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
 import com.example.movieticketbookingbe.dto.showtime.ShowtimeCreateDTO;
 import com.example.movieticketbookingbe.model.Showtime;
+import com.example.movieticketbookingbe.dto.movie.MovieDTO;
+import com.example.movieticketbookingbe.dto.screen.ScreenDTO;
 
 public class ShowtimeMapper {
     public static ShowtimeDTO toDTO(Showtime showtime) {
         if (showtime == null) return null;
         ShowtimeDTO dto = new ShowtimeDTO();
         dto.setId(showtime.getId());
-        dto.setMovieId(showtime.getMovieId());
-        dto.setTheaterId(showtime.getTheaterId());
-        dto.setScreenId(showtime.getScreenId());
+        dto.setMovie(showtime.getMovie() != null ? MovieMapper.toDTO(showtime.getMovie()) : null);
+        dto.setScreen(showtime.getScreen() != null ? ScreenMapper.toDTO(showtime.getScreen()) : null);
         dto.setStartTime(showtime.getStartTime());
         dto.setEndTime(showtime.getEndTime());
-        dto.setPrice(showtime.getPrice());
         dto.setIsActive(showtime.getIsActive());
-        dto.setMovieTitle(showtime.getMovieTitle());
-        dto.setTheaterName(showtime.getTheaterName());
-        dto.setScreenName(showtime.getScreenName());
-        dto.setTheaterAddress(showtime.getTheaterAddress());
+        dto.setCreatedAt(showtime.getCreatedAt());
+        dto.setUpdatedAt(showtime.getUpdatedAt());
         return dto;
     }
 

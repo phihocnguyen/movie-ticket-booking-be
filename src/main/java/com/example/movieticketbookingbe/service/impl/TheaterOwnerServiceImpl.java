@@ -4,6 +4,14 @@ import com.example.movieticketbookingbe.model.TheaterOwner;
 import com.example.movieticketbookingbe.repository.TheaterOwnerRepository;
 import com.example.movieticketbookingbe.service.TheaterOwnerService;
 import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerPatchDTO;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerWithUserCreateDTO;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerCreateDTO;
+import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
+import com.example.movieticketbookingbe.model.User;
+import com.example.movieticketbookingbe.service.UserService;
+import com.example.movieticketbookingbe.mapper.UserMapper;
+import com.example.movieticketbookingbe.mapper.TheaterOwnerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +23,7 @@ import java.util.Optional;
 @Transactional
 public class TheaterOwnerServiceImpl implements TheaterOwnerService {
     private final TheaterOwnerRepository theaterOwnerRepository;
+    private final UserService userService;
 
     @Override
     public TheaterOwner createTheaterOwner(TheaterOwner owner) {
@@ -71,5 +80,18 @@ public class TheaterOwnerServiceImpl implements TheaterOwnerService {
         if (patchDTO.getIsActive() != null) owner.setIsActive(patchDTO.getIsActive());
         if (patchDTO.getUserId() != null) owner.setUser(null); // cần xử lý set user thực tế nếu cần
         return theaterOwnerRepository.save(owner);
+    }
+
+    @Override
+    @Transactional
+    public TheaterOwnerDTO createTheaterOwnerWithUser(TheaterOwnerWithUserCreateDTO dto) {
+        UserCreateDTO userCreateDTO = dto.getUser();
+        User user = UserMapper.toEntity(userCreateDTO);
+        user = userService.createUser(user);
+        TheaterOwner owner = new TheaterOwner();
+        owner.setUser(user);
+        TheaterOwner savedOwner = theaterOwnerRepository.save(owner);
+
+        return TheaterOwnerMapper.toDTO(savedOwner);
     }
 } 

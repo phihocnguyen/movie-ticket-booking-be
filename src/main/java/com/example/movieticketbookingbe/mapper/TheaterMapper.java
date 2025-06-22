@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.mapper;
 import com.example.movieticketbookingbe.dto.TheaterDTO;
 import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
 
 public class TheaterMapper {
     public static TheaterDTO toDTO(Theater theater) {
@@ -23,6 +24,7 @@ public class TheaterMapper {
         dto.setTotalScreens(theater.getTotalScreens());
         dto.setCreatedAt(theater.getCreatedAt());
         dto.setUpdatedAt(theater.getUpdatedAt());
+        dto.setTheaterOwner(theater.getTheaterOwner() != null ? com.example.movieticketbookingbe.mapper.TheaterOwnerMapper.toDTO(theater.getTheaterOwner()) : null);
         return dto;
     }
 
