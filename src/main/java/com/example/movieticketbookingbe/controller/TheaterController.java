@@ -5,6 +5,7 @@ import com.example.movieticketbookingbe.service.TheaterService;
 import com.example.movieticketbookingbe.dto.TheaterDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
+import com.example.movieticketbookingbe.dto.theater.TheaterPatchDTO;
 import com.example.movieticketbookingbe.mapper.TheaterMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,17 +39,18 @@ public class TheaterController {
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater created successfully", dto));
     }
 
-    @Operation(summary = "Update a theater", description = "Updates an existing theater by its ID")
+    @Operation(summary = "Update a theater", description = "Partially updates an existing theater by its ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Theater updated successfully"),
             @ApiResponse(responseCode = "404", description = "Theater not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<Theater> updateTheater(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<TheaterDTO>> patchTheater(
             @Parameter(description = "ID of the theater to update") @PathVariable Long id,
-            @RequestBody Theater theater) {
-        return ResponseEntity.ok(theaterService.updateTheater(id, theater));
+            @RequestBody TheaterPatchDTO patchDTO) {
+        Theater updated = theaterService.patchTheater(id, patchDTO);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater updated successfully", TheaterMapper.toDTO(updated)));
     }
 
     @Operation(summary = "Delete a theater", description = "Deletes a theater by its ID")

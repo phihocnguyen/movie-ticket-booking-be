@@ -4,6 +4,7 @@ import com.example.movieticketbookingbe.model.Showtime;
 import com.example.movieticketbookingbe.service.ShowtimeService;
 import com.example.movieticketbookingbe.dto.ShowtimeDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimePatchDTO;
 import com.example.movieticketbookingbe.mapper.ShowtimeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,11 @@ public class ShowtimeController {
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtime created successfully", dto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDTO<ShowtimeDTO>> updateShowtime(@PathVariable Long id, @RequestBody Showtime showtime) {
-        ShowtimeDTO dto = ShowtimeMapper.toDTO(showtimeService.updateShowtime(id, showtime));
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<ShowtimeDTO>> patchShowtime(
+            @PathVariable Long id,
+            @RequestBody ShowtimePatchDTO patchDTO) {
+        ShowtimeDTO dto = ShowtimeMapper.toDTO(showtimeService.patchShowtime(id, patchDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtime updated successfully", dto));
     }
 

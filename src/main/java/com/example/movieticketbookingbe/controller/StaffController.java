@@ -1,11 +1,12 @@
 package com.example.movieticketbookingbe.controller;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
-import com.example.movieticketbookingbe.dto.staff.StaffCreateDTO;
-import com.example.movieticketbookingbe.dto.staff.StaffDTO;
-import com.example.movieticketbookingbe.mapper.StaffMapper;
-import com.example.movieticketbookingbe.model.Staff;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerCreateDTO;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerDTO;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerPatchDTO;
+import com.example.movieticketbookingbe.mapper.TheaterOwnerMapper;
+import com.example.movieticketbookingbe.model.TheaterOwner;
 import com.example.movieticketbookingbe.model.User;
-import com.example.movieticketbookingbe.service.StaffService;
+import com.example.movieticketbookingbe.service.TheaterOwnerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,104 +17,91 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/staff")
+@RequestMapping("/api/theater-owner")
 @RequiredArgsConstructor
-@Tag(name = "Staff", description = "Staff management APIs")
-public class StaffController {
-    private final StaffService staffService;
+@Tag(name = "TheaterOwner", description = "Theater owner management APIs")
+public class TheaterOwnerController {
+    private final TheaterOwnerService theaterOwnerService;
 
-    @Operation(summary = "Create a new staff member", description = "Creates a new staff member with the provided information")
+    @Operation(summary = "Create a new theater owner", description = "Creates a new theater owner with the provided information")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Staff member created successfully", content = @Content(schema = @Schema(implementation = Staff.class))),
+            @ApiResponse(responseCode = "200", description = "Theater owner created successfully", content = @Content(schema = @Schema(implementation = TheaterOwner.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<StaffDTO>> createStaff(@RequestBody StaffCreateDTO staffCreateDTO) {
-        Staff staff = StaffMapper.toEntity(staffCreateDTO);
-        // Nếu cần, set theater và user từ service hoặc mapping bổ sung
-        StaffDTO dto = StaffMapper.toDTO(staffService.createStaff(staff));
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Staff member created successfully", dto));
+    public ResponseEntity<ApiResponseDTO<TheaterOwnerDTO>> createTheaterOwner(@RequestBody TheaterOwnerCreateDTO createDTO) {
+        TheaterOwner owner = TheaterOwnerMapper.toEntity(createDTO);
+        TheaterOwnerDTO dto = TheaterOwnerMapper.toDTO(theaterOwnerService.createTheaterOwner(owner));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater owner created successfully", dto));
     }
 
-    @Operation(summary = "Update a staff member", description = "Updates an existing staff member by their ID")
+    @Operation(summary = "Update a theater owner", description = "Partially updates an existing theater owner by their ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Staff member updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Staff member not found"),
+            @ApiResponse(responseCode = "200", description = "Theater owner updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Theater owner not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<Staff> updateStaff(
-            @Parameter(description = "ID of the staff member to update") @PathVariable Long id,
-            @RequestBody Staff staff) {
-        return ResponseEntity.ok(staffService.updateStaff(id, staff));
+    @PatchMapping("/{id}")
+    public ResponseEntity<TheaterOwnerDTO> patchTheaterOwner(
+            @Parameter(description = "ID of the theater owner to update") @PathVariable Long id,
+            @RequestBody TheaterOwnerPatchDTO patchDTO) {
+        return ResponseEntity.ok(TheaterOwnerMapper.toDTO(theaterOwnerService.patchTheaterOwner(id, patchDTO)));
     }
 
-    @Operation(summary = "Delete a staff member", description = "Deletes a staff member by their ID")
+    @Operation(summary = "Delete a theater owner", description = "Deletes a theater owner by their ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Staff member deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Staff member not found")
+            @ApiResponse(responseCode = "200", description = "Theater owner deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Theater owner not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStaff(
-            @Parameter(description = "ID of the staff member to delete") @PathVariable Long id) {
-        staffService.deleteStaff(id);
+    public ResponseEntity<Void> deleteTheaterOwner(
+            @Parameter(description = "ID of the theater owner to delete") @PathVariable Long id) {
+        theaterOwnerService.deleteTheaterOwner(id);
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Get a staff member by ID", description = "Returns a staff member by their ID")
+    @Operation(summary = "Get a theater owner by ID", description = "Returns a theater owner by their ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Staff member found", content = @Content(schema = @Schema(implementation = Staff.class))),
-            @ApiResponse(responseCode = "404", description = "Staff member not found")
+            @ApiResponse(responseCode = "200", description = "Theater owner found", content = @Content(schema = @Schema(implementation = TheaterOwner.class))),
+            @ApiResponse(responseCode = "404", description = "Theater owner not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Staff> getStaffById(
-            @Parameter(description = "ID of the staff member to retrieve") @PathVariable Long id) {
-        return staffService.getStaffById(id)
-                .map(ResponseEntity::ok)
+    public ResponseEntity<TheaterOwnerDTO> getTheaterOwnerById(
+            @Parameter(description = "ID of the theater owner to retrieve") @PathVariable Long id) {
+        return theaterOwnerService.getTheaterOwnerById(id)
+                .map(owner -> ResponseEntity.ok(TheaterOwnerMapper.toDTO(owner)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Get all staff members", description = "Returns a list of all staff members")
-    @ApiResponse(responseCode = "200", description = "List of staff members retrieved successfully")
+    @Operation(summary = "Get all theater owners", description = "Returns a list of all theater owners")
+    @ApiResponse(responseCode = "200", description = "List of theater owners retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<Staff>> getAllStaff() {
-        return ResponseEntity.ok(staffService.getAllStaff());
+    public ResponseEntity<List<TheaterOwnerDTO>> getAllTheaterOwners() {
+        List<TheaterOwnerDTO> dtoList = theaterOwnerService.getAllTheaterOwners().stream().map(TheaterOwnerMapper::toDTO).toList();
+        return ResponseEntity.ok(dtoList);
     }
 
-    @Operation(summary = "Get active staff members", description = "Returns a list of all active staff members")
-    @ApiResponse(responseCode = "200", description = "List of active staff members retrieved successfully")
+    @Operation(summary = "Get active theater owners", description = "Returns a list of all active theater owners")
+    @ApiResponse(responseCode = "200", description = "List of active theater owners retrieved successfully")
     @GetMapping("/active")
-    public ResponseEntity<ApiResponseDTO<List<StaffDTO>>> getActiveStaff() {
-        List<Staff> staffList = staffService.findByUserRoleAndUserIsActiveTrue(User.UserRole.THEATER_OWNER);
-        List<StaffDTO> dtoList = staffList.stream()
-                .map(StaffMapper::toDTO)
-                .toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách nhân viên đang hoạt động thành công", dtoList));
+    public ResponseEntity<List<TheaterOwnerDTO>> getActiveTheaterOwners() {
+        List<TheaterOwnerDTO> dtoList = theaterOwnerService.getActiveTheaterOwners().stream().map(TheaterOwnerMapper::toDTO).toList();
+        return ResponseEntity.ok(dtoList);
     }
 
-    @Operation(summary = "Get staff members by theater", description = "Returns a list of staff members for a specific theater")
-    @ApiResponse(responseCode = "200", description = "List of theater's staff members retrieved successfully")
-    @GetMapping("/theater/{theaterId}")
-    public ResponseEntity<ApiResponseDTO<List<StaffDTO>>> getStaffByTheater(
-            @Parameter(description = "ID of the theater") @PathVariable Long theaterId) {
-        List<StaffDTO> dtoList = staffService.getStaffByTheater(theaterId).stream().map(StaffMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách nhân viên theo rạp thành công", dtoList));
-    }
-
-    @Operation(summary = "Get staff member by user", description = "Returns a staff member associated with a specific user")
+    @Operation(summary = "Get theater owner by user", description = "Returns a theater owner associated with a specific user")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Staff member found", content = @Content(schema = @Schema(implementation = Staff.class))),
-            @ApiResponse(responseCode = "404", description = "Staff member not found")
+            @ApiResponse(responseCode = "200", description = "Theater owner found", content = @Content(schema = @Schema(implementation = TheaterOwner.class))),
+            @ApiResponse(responseCode = "404", description = "Theater owner not found")
     })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponseDTO<StaffDTO>> getStaffByUser(
+    public ResponseEntity<TheaterOwnerDTO> getTheaterOwnerByUser(
             @Parameter(description = "ID of the user") @PathVariable Long userId) {
-        return staffService.getStaffByUser(userId)
-                .map(staff -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy nhân viên", StaffMapper.toDTO(staff))))
-                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy nhân viên", null)));
+        return theaterOwnerService.getTheaterOwnerByUser(userId)
+                .map(owner -> ResponseEntity.ok(TheaterOwnerMapper.toDTO(owner)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

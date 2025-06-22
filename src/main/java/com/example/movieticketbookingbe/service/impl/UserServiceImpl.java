@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.service.impl;
 
 import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
+import com.example.movieticketbookingbe.dto.user.UserPatchDTO;
 import com.example.movieticketbookingbe.mapper.UserMapper;
 import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.repository.UserRepository;
@@ -94,5 +95,18 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public User patchUser(Long id, UserPatchDTO patchDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (patchDTO.getFullName() != null) user.setFullName(patchDTO.getFullName());
+        if (patchDTO.getEmail() != null) user.setEmail(patchDTO.getEmail());
+        if (patchDTO.getPhoneNumber() != null) user.setPhoneNumber(patchDTO.getPhoneNumber());
+        if (patchDTO.getAddress() != null) user.setAddress(patchDTO.getAddress());
+        if (patchDTO.getIsActive() != null) user.setIsActive(patchDTO.getIsActive());
+        if (patchDTO.getRole() != null) user.setRole(User.UserRole.valueOf(patchDTO.getRole().toUpperCase()));
+        return userRepository.save(user);
     }
 }

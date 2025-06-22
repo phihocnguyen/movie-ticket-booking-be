@@ -22,4 +22,6 @@ public interface SeatTypeService {
     boolean existsByName(String name);
 
     List<SeatType> searchSeatTypes(String name);
+
+    SeatType patchSeatType(Long id, com.example.movieticketbookingbe.dto.seattype.SeatTypePatchDTO patchDTO);
 }

@@ -69,4 +69,14 @@ public class SeatTypeServiceImpl implements SeatTypeService {
     public List<SeatType> searchSeatTypes(String name) {
         return seatTypeRepository.findByNameContainingIgnoreCase(name);
     }
+
+    @Override
+    public SeatType patchSeatType(Long id, SeatTypePatchDTO patchDTO) {
+        SeatType seatType = seatTypeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("SeatType not found"));
+        if (patchDTO.getName() != null) seatType.setName(patchDTO.getName());
+        if (patchDTO.getPrice() != null) seatType.setPrice(patchDTO.getPrice());
+        if (patchDTO.getIsActive() != null) seatType.setIsActive(patchDTO.getIsActive());
+        return seatTypeRepository.save(seatType);
+    }
 }

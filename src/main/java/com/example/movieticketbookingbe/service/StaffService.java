@@ -1,29 +1,18 @@
 package com.example.movieticketbookingbe.service;
 
-import com.example.movieticketbookingbe.model.Staff;
-import com.example.movieticketbookingbe.model.User;
-
+import com.example.movieticketbookingbe.model.TheaterOwner;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerPatchDTO;
 import java.util.List;
 import java.util.Optional;
 
-public interface StaffService {
-    Staff createStaff(Staff staff);
-
-    Staff updateStaff(Long id, Staff staff);
-
-    void deleteStaff(Long id);
-
-    Optional<Staff> getStaffById(Long id);
-
-    List<Staff> getAllStaff();
-
-    List<Staff> getActiveStaff();
-    List<Staff> findByUserRoleAndUserIsActiveTrue(User.UserRole role);
-    List<Staff> getStaffByTheater(Long theaterId);
-
-    Optional<Staff> getStaffByUser(Long userId);
-
-    boolean existsByUser(Long userId);
-
-    boolean existsByTheaterAndPosition(Long theaterId, String position);
+public interface TheaterOwnerService {
+    TheaterOwner createTheaterOwner(TheaterOwner owner);
+    TheaterOwner updateTheaterOwner(Long id, TheaterOwner owner);
+    void deleteTheaterOwner(Long id);
+    Optional<TheaterOwner> getTheaterOwnerById(Long id);
+    List<TheaterOwner> getAllTheaterOwners();
+    List<TheaterOwner> getActiveTheaterOwners();
+    Optional<TheaterOwner> getTheaterOwnerByUser(Long userId);
+    boolean existsByUserId(Long userId);
+    TheaterOwner patchTheaterOwner(Long id, TheaterOwnerPatchDTO patchDTO);
 }

@@ -10,8 +10,6 @@ public class TheaterOwnerMapper {
         TheaterOwnerDTO dto = new TheaterOwnerDTO();
         dto.setId(owner.getId());
         dto.setUserId(owner.getUser() != null ? owner.getUser().getId() : null);
-        dto.setPosition(owner.getPosition());
-        dto.setSalary(owner.getSalary());
         dto.setIsActive(owner.getIsActive());
         dto.setCreatedAt(owner.getCreatedAt());
         dto.setUpdatedAt(owner.getUpdatedAt());
@@ -21,10 +19,8 @@ public class TheaterOwnerMapper {
     public static TheaterOwner toEntity(TheaterOwnerCreateDTO dto) {
         if (dto == null) return null;
         TheaterOwner owner = new TheaterOwner();
-        owner.setUser(null);
-        owner.setPosition(dto.getPosition());
-        owner.setSalary(dto.getSalary());
+        owner.setUser(null); // cần set user thực tế ở service
         owner.setIsActive(dto.getIsActive());
         return owner;
     }
-}
+} 

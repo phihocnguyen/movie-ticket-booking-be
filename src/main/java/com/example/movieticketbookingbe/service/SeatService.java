@@ -28,4 +28,6 @@ public interface SeatService {
     List<Seat> searchSeats(String seatNumber, Long screenId);
 
     boolean existsByNumber(String seatNumber);
+
+    Seat patchSeat(Long id, com.example.movieticketbookingbe.dto.seat.SeatPatchDTO patchDTO);
 }

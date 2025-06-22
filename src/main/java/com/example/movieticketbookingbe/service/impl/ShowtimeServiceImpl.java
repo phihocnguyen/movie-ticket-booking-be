@@ -157,6 +157,23 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         return showtimeRepository.existsByMovieIdAndScreenIdAndStartTime(movieId, screenId, startTime);
     }
 
+    @Override
+    public Showtime patchShowtime(Long id, ShowtimePatchDTO patchDTO) {
+        Showtime showtime = showtimeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Showtime not found"));
+        if (patchDTO.getStartTime() != null) showtime.setStartTime(patchDTO.getStartTime());
+        if (patchDTO.getEndTime() != null) showtime.setEndTime(patchDTO.getEndTime());
+        if (patchDTO.getPrice() != null) showtime.setPrice(patchDTO.getPrice());
+        if (patchDTO.getIsActive() != null) showtime.setIsActive(patchDTO.getIsActive());
+        if (patchDTO.getMovieId() != null) {
+            // TODO: set movie entity nếu cần
+        }
+        if (patchDTO.getScreenId() != null) {
+            // TODO: set screen entity nếu cần
+        }
+        return showtimeRepository.save(showtime);
+    }
+
     private void validateTimeConflicts(Showtime showtime) {
         List<Showtime> existingShowtimes = showtimeRepository.findByScreenIdAndIsActiveTrue(showtime.getScreenId());
         for (Showtime existing : existingShowtimes) {

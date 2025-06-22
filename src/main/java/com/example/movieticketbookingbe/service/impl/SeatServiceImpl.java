@@ -87,4 +87,17 @@ public class SeatServiceImpl implements SeatService {
     public boolean existsByNumber(String seatNumber) {
         return seatRepository.existsBySeatNumber(seatNumber);
     }
+
+    @Override
+    public Seat patchSeat(Long id, SeatPatchDTO patchDTO) {
+        Seat seat = seatRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Seat not found"));
+        if (patchDTO.getSeatNumber() != null) seat.setSeatNumber(patchDTO.getSeatNumber());
+        if (patchDTO.getSeatType() != null) seat.setSeatType(patchDTO.getSeatType());
+        if (patchDTO.getIsActive() != null) seat.setIsActive(patchDTO.getIsActive());
+        if (patchDTO.getScreenId() != null) {
+            // TODO: set screen entity nếu cần
+        }
+        return seatRepository.save(seat);
+    }
 }

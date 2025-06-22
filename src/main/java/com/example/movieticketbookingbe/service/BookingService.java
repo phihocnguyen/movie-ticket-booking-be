@@ -27,4 +27,6 @@ public interface BookingService {
     Booking cancelBooking(Long id);
 
     Booking completeBooking(Long id);
+
+    Booking patchBooking(Long id, com.example.movieticketbookingbe.dto.booking.BookingPatchDTO patchDTO);
 }

@@ -6,6 +6,7 @@ import com.example.movieticketbookingbe.dto.ScreenDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.ScreenMapper;
 import com.example.movieticketbookingbe.dto.screen.ScreenCreateDTO;
+import com.example.movieticketbookingbe.dto.screen.ScreenPatchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,11 +45,11 @@ public class ScreenController {
             @ApiResponse(responseCode = "404", description = "Screen not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDTO<ScreenDTO>> updateScreen(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<ScreenDTO>> patchScreen(
             @Parameter(description = "ID of the screen to update") @PathVariable Long id,
-            @RequestBody Screen screen) {
-        ScreenDTO dto = ScreenMapper.toDTO(screenService.updateScreen(id, screen));
+            @RequestBody ScreenPatchDTO patchDTO) {
+        ScreenDTO dto = ScreenMapper.toDTO(screenService.patchScreen(id, patchDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen updated successfully", dto));
     }
 

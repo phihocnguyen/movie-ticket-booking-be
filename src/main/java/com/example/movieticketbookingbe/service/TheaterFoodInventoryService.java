@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.service;
 
 import com.example.movieticketbookingbe.model.TheaterFoodInventory;
+import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInventoryPatchDTO;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +23,6 @@ public interface TheaterFoodInventoryService {
     List<TheaterFoodInventory> getTheaterFoodInventoryByTheater(Long theaterId);
 
     boolean existsByTheaterAndName(Long theaterId, String name);
+
+    TheaterFoodInventory patchTheaterFoodInventory(Long id, TheaterFoodInventoryPatchDTO patchDTO);
 }

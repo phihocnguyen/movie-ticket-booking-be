@@ -185,4 +185,17 @@ public class ScreenServiceImpl implements ScreenService {
     public boolean existsByScreenName(String screenName) {
         return screenRepository.existsByScreenName(screenName);
     }
+
+    @Override
+    public Screen patchScreen(Long id, ScreenPatchDTO patchDTO) {
+        Screen screen = screenRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Screen not found"));
+        if (patchDTO.getScreenName() != null) screen.setScreenName(patchDTO.getScreenName());
+        if (patchDTO.getCapacity() != null) screen.setCapacity(patchDTO.getCapacity());
+        if (patchDTO.getIsActive() != null) screen.setIsActive(patchDTO.getIsActive());
+        if (patchDTO.getTheaterId() != null) {
+            // TODO: set theater entity nếu cần
+        }
+        return screenRepository.save(screen);
+    }
 }

@@ -6,6 +6,7 @@ import com.example.movieticketbookingbe.service.TheaterFoodInventoryService;
 import com.example.movieticketbookingbe.dto.TheaterFoodInventoryDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInventoryCreateDTO;
+import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInventoryPatchDTO;
 import com.example.movieticketbookingbe.mapper.TheaterFoodInventoryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,17 +40,18 @@ public class TheaterFoodInventoryController {
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Food added successfully", dto));
     }
 
-    @Operation(summary = "Update theater food", description = "Updates an existing food item in theater's inventory")
+    @Operation(summary = "Update theater food", description = "Partially updates an existing food item in theater's inventory")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Food updated successfully"),
             @ApiResponse(responseCode = "404", description = "Food not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<TheaterFoodInventory> updateTheaterFood(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<TheaterFoodInventoryDTO>> patchTheaterFood(
             @Parameter(description = "ID of the theater food to update") @PathVariable Long id,
-            @RequestBody TheaterFoodInventory theaterFoodInventory) {
-        return ResponseEntity.ok(theaterFoodInventoryService.updateTheaterFoodInventory(id, theaterFoodInventory));
+            @RequestBody TheaterFoodInventoryPatchDTO patchDTO) {
+        TheaterFoodInventory updated = theaterFoodInventoryService.patchTheaterFoodInventory(id, patchDTO);
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Food updated successfully", TheaterFoodInventoryMapper.toDTO(updated)));
     }
 
     @Operation(summary = "Remove food from theater", description = "Removes a food item from theater's inventory")
@@ -89,7 +91,7 @@ public class TheaterFoodInventoryController {
     @GetMapping("/active")
     public ResponseEntity<ApiResponseDTO<List<TheaterFoodInventoryDTO>>> getActiveTheaterFoods() {
         List<TheaterFoodInventoryDTO> dtos = theaterFoodInventoryService.getActiveTheaterFoodInventory().stream().map(TheaterFoodInventoryMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active theater foods retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách đồ ăn đang hoạt động thành công", dtos));
     }
 
     @Operation(summary = "Get theater foods by theater", description = "Returns all food items for a specific theater")
@@ -98,7 +100,7 @@ public class TheaterFoodInventoryController {
     public ResponseEntity<ApiResponseDTO<List<TheaterFoodInventoryDTO>>> getTheaterFoodsByTheater(
             @Parameter(description = "ID of the theater") @PathVariable Long theaterId) {
         List<TheaterFoodInventoryDTO> dtos = theaterFoodInventoryService.getTheaterFoodInventoryByTheater(theaterId).stream().map(TheaterFoodInventoryMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theater foods retrieved successfully", dtos));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách đồ ăn theo rạp thành công", dtos));
     }
 
     @Operation(summary = "Check if food exists in theater", description = "Checks if a food item exists in a theater's inventory")

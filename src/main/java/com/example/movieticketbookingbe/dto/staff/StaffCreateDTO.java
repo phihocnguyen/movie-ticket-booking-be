@@ -1,10 +1,9 @@
-package com.example.movieticketbookingbe.dto.staff;
+package com.example.movieticketbookingbe.dto.theaterowner;
 
 import lombok.Data;
 
 @Data
-public class StaffCreateDTO {
-    private Long theaterId;
+public class TheaterOwnerCreateDTO {
     private Long userId;
     private String position;
     private Double salary;

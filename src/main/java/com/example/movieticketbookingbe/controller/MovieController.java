@@ -6,6 +6,7 @@ import com.example.movieticketbookingbe.dto.MovieDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.MovieMapper;
 import com.example.movieticketbookingbe.dto.movie.MovieCreateDTO;
+import com.example.movieticketbookingbe.dto.movie.MoviePatchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,11 +45,11 @@ public class MovieController {
             @ApiResponse(responseCode = "404", description = "Movie not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDTO<MovieDTO>> updateMovie(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<MovieDTO>> patchMovie(
             @Parameter(description = "ID of the movie to update") @PathVariable Long id,
-            @RequestBody Movie movie) {
-        MovieDTO dto = MovieMapper.toDTO(movieService.updateMovie(id, movie));
+            @RequestBody MoviePatchDTO patchDTO) {
+        MovieDTO dto = MovieMapper.toDTO(movieService.patchMovie(id, patchDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Movie updated successfully", dto));
     }
 

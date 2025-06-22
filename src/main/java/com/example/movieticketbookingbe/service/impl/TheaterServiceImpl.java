@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.service.impl;
 import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.repository.TheaterRepository;
 import com.example.movieticketbookingbe.service.TheaterService;
+import com.example.movieticketbookingbe.dto.theater.TheaterPatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,5 +99,19 @@ public class TheaterServiceImpl implements TheaterService {
     @Transactional(readOnly = true)
     public boolean existsByPhoneNumber(String phoneNumber) {
         return theaterRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public Theater patchTheater(Long id, TheaterPatchDTO patchDTO) {
+        Theater theater = theaterRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Theater not found"));
+        if (patchDTO.getName() != null) theater.setName(patchDTO.getName());
+        if (patchDTO.getAddress() != null) theater.setAddress(patchDTO.getAddress());
+        if (patchDTO.getCity() != null) theater.setCity(patchDTO.getCity());
+        if (patchDTO.getState() != null) theater.setState(patchDTO.getState());
+        if (patchDTO.getPhoneNumber() != null) theater.setPhoneNumber(patchDTO.getPhoneNumber());
+        if (patchDTO.getEmail() != null) theater.setEmail(patchDTO.getEmail());
+        if (patchDTO.getIsActive() != null) theater.setIsActive(patchDTO.getIsActive());
+        return theaterRepository.save(theater);
     }
 }

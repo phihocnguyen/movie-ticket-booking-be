@@ -1,86 +1,76 @@
 package com.example.movieticketbookingbe.service.impl;
 
-import com.example.movieticketbookingbe.model.Staff;
-import com.example.movieticketbookingbe.model.User;
-import com.example.movieticketbookingbe.repository.StaffRepository;
-import com.example.movieticketbookingbe.service.StaffService;
+import com.example.movieticketbookingbe.model.TheaterOwner;
+import com.example.movieticketbookingbe.repository.TheaterOwnerRepository;
+import com.example.movieticketbookingbe.service.TheaterOwnerService;
+import com.example.movieticketbookingbe.dto.theaterowner.TheaterOwnerPatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class StaffServiceImpl implements StaffService {
-    private final StaffRepository staffRepository;
+public class TheaterOwnerServiceImpl implements TheaterOwnerService {
+    private final TheaterOwnerRepository theaterOwnerRepository;
 
     @Override
-    public Staff createStaff(Staff staff) {
-        return staffRepository.save(staff);
+    public TheaterOwner createTheaterOwner(TheaterOwner owner) {
+        return theaterOwnerRepository.save(owner);
     }
 
     @Override
-    public Staff updateStaff(Long id, Staff staff) {
-        Staff existingStaff = staffRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Staff not found"));
-        staff.setId(existingStaff.getId());
-        return staffRepository.save(staff);
+    public TheaterOwner updateTheaterOwner(Long id, TheaterOwner owner) {
+        TheaterOwner existing = theaterOwnerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("TheaterOwner not found"));
+        owner.setId(existing.getId());
+        return theaterOwnerRepository.save(owner);
     }
 
     @Override
-    public void deleteStaff(Long id) {
-        staffRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Staff> getStaffById(Long id) {
-        return staffRepository.findById(id);
+    public void deleteTheaterOwner(Long id) {
+        theaterOwnerRepository.deleteById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Staff> getAllStaff() {
-        return staffRepository.findAll();
+    public Optional<TheaterOwner> getTheaterOwnerById(Long id) {
+        return theaterOwnerRepository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Staff> getActiveStaff() {
-        return staffRepository.findByIsActiveTrue();
-    }
-
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Staff> findByUserRoleAndUserIsActiveTrue(User.UserRole role) {
-        return staffRepository.findByUserRoleAndUserIsActiveTrue(role);
+    public List<TheaterOwner> getAllTheaterOwners() {
+        return theaterOwnerRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Staff> getStaffByTheater(Long theaterId) {
-        return staffRepository.findByTheaterId(theaterId);
+    public List<TheaterOwner> getActiveTheaterOwners() {
+        return theaterOwnerRepository.findByIsActiveTrue();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Staff> getStaffByUser(Long userId) {
-        return staffRepository.findByUserId(userId);
+    public Optional<TheaterOwner> getTheaterOwnerByUser(Long userId) {
+        return theaterOwnerRepository.findByUserId(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existsByUser(Long userId) {
-        return staffRepository.existsByUserId(userId);
+    public boolean existsByUserId(Long userId) {
+        return theaterOwnerRepository.existsByUserId(userId);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public boolean existsByTheaterAndPosition(Long theaterId, String position) {
-        return staffRepository.existsByTheaterIdAndPosition(theaterId, position);
+    public TheaterOwner patchTheaterOwner(Long id, TheaterOwnerPatchDTO patchDTO) {
+        TheaterOwner owner = theaterOwnerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("TheaterOwner not found"));
+        if (patchDTO.getPosition() != null) owner.setPosition(patchDTO.getPosition());
+        if (patchDTO.getIsActive() != null) owner.setIsActive(patchDTO.getIsActive());
+        if (patchDTO.getUserId() != null) owner.setUser(null); // Cần xử lý set user thực tế nếu cần
+        return theaterOwnerRepository.save(owner);
     }
 }

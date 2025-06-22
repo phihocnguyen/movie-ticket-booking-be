@@ -7,6 +7,7 @@ import com.example.movieticketbookingbe.service.TheaterFoodInventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInventoryPatchDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,5 +75,14 @@ public class TheaterFoodInventoryServiceImpl implements TheaterFoodInventoryServ
     @Transactional(readOnly = true)
     public boolean existsByTheaterAndName(Long theaterId, String name) {
         return theaterFoodInventoryRepository.existsByTheaterIdAndName(theaterId, name);
+    }
+
+    @Override
+    public TheaterFoodInventory patchTheaterFoodInventory(Long id, TheaterFoodInventoryPatchDTO patchDTO) {
+        TheaterFoodInventory entity = theaterFoodInventoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("TheaterFoodInventory not found"));
+        if (patchDTO.getQuantity() != null) entity.setQuantity(patchDTO.getQuantity());
+        if (patchDTO.getIsActive() != null) entity.setIsActive(patchDTO.getIsActive());
+        return theaterFoodInventoryRepository.save(entity);
     }
 }

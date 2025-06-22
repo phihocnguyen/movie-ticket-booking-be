@@ -94,4 +94,26 @@ public class MovieServiceImpl implements MovieService {
     public List<Movie> getTopRatedMovies() {
         return movieRepository.findTopRatedMovies();
     }
+
+    @Override
+    public Movie patchMovie(Long id, MoviePatchDTO patchDTO) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+        if (patchDTO.getTitle() != null) movie.setTitle(patchDTO.getTitle());
+        if (patchDTO.getTitleVi() != null) movie.setTitleVi(patchDTO.getTitleVi());
+        if (patchDTO.getDescription() != null) movie.setDescription(patchDTO.getDescription());
+        if (patchDTO.getDuration() != null) movie.setDuration(patchDTO.getDuration());
+        if (patchDTO.getLanguage() != null) movie.setLanguage(patchDTO.getLanguage());
+        if (patchDTO.getGenre() != null) movie.setGenre(patchDTO.getGenre());
+        if (patchDTO.getReleaseDate() != null) movie.setReleaseDate(patchDTO.getReleaseDate());
+        if (patchDTO.getPosterUrl() != null) movie.setPosterUrl(patchDTO.getPosterUrl());
+        if (patchDTO.getBackdropUrl() != null) movie.setBackdropUrl(patchDTO.getBackdropUrl());
+        if (patchDTO.getTrailerUrl() != null) movie.setTrailerUrl(patchDTO.getTrailerUrl());
+        if (patchDTO.getDirector() != null) movie.setDirector(patchDTO.getDirector());
+        if (patchDTO.getActor() != null) movie.setActor(patchDTO.getActor());
+        if (patchDTO.getRating() != null) movie.setRating(patchDTO.getRating());
+        if (patchDTO.getCountry() != null) movie.setCountry(patchDTO.getCountry());
+        if (patchDTO.getIsActive() != null) movie.setIsActive(patchDTO.getIsActive());
+        return movieRepository.save(movie);
+    }
 }

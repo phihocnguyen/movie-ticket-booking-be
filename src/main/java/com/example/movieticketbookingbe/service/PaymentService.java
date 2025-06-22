@@ -22,4 +22,6 @@ public interface PaymentService {
     Payment failPayment(Long id);
 
     Payment refundPayment(Long id);
+
+    Payment patchPayment(Long id, com.example.movieticketbookingbe.dto.payment.PaymentPatchDTO patchDTO);
 }

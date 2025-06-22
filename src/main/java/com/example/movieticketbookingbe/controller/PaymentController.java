@@ -6,6 +6,7 @@ import com.example.movieticketbookingbe.dto.PaymentDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.PaymentMapper;
 import com.example.movieticketbookingbe.dto.payment.PaymentCreateDTO;
+import com.example.movieticketbookingbe.dto.payment.PaymentPatchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,11 +45,11 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDTO<PaymentDTO>> updatePayment(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<PaymentDTO>> patchPayment(
             @Parameter(description = "ID of the payment to update") @PathVariable Long id,
-            @RequestBody Payment payment) {
-        PaymentDTO dto = PaymentMapper.toDTO(paymentService.updatePayment(id, payment));
+            @RequestBody PaymentPatchDTO patchDTO) {
+        PaymentDTO dto = PaymentMapper.toDTO(paymentService.patchPayment(id, patchDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Payment updated successfully", dto));
     }
 

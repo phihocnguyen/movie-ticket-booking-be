@@ -56,11 +56,11 @@ public class Theater {
 
     @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Staff> staff = new ArrayList<>();
-
-    @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<TheaterFoodInventory> foodInventories = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "theater_owner_id")
+    private TheaterOwner theaterOwner;
 
     private LocalTime openingTime;
 

@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.service;
 
 import com.example.movieticketbookingbe.model.Theater;
+import com.example.movieticketbookingbe.dto.theater.TheaterPatchDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +34,6 @@ public interface TheaterService {
     boolean existsByEmail(String email);
 
     boolean existsByPhoneNumber(String phoneNumber);
+
+    Theater patchTheater(Long id, TheaterPatchDTO patchDTO);
 }

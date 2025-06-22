@@ -9,6 +9,7 @@ import com.example.movieticketbookingbe.service.UserService;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.UserMapper;
 import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
+import com.example.movieticketbookingbe.dto.user.UserPatchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,17 +42,17 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "User created successfully", dto));
     }
 
-    @Operation(summary = "Update a user", description = "Updates an existing user by their ID")
+    @Operation(summary = "Update a user", description = "Partially updates an existing user by their ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDTO<UserDTO>> updateUser(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<UserDTO>> patchUser(
             @Parameter(description = "ID of the user to update") @PathVariable Long id,
-            @RequestBody UserCreateDTO user) {
-        UserDTO dto = UserMapper.toDTO(userService.updateUser(id, user));
+            @RequestBody UserPatchDTO patchDTO) {
+        UserDTO dto = UserMapper.toDTO(userService.patchUser(id, patchDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "User updated successfully", dto));
     }
 

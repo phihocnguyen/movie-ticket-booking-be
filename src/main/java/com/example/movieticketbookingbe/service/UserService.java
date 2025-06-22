@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.service;
 
 import com.example.movieticketbookingbe.dto.user.UserCreateDTO;
+import com.example.movieticketbookingbe.dto.user.UserPatchDTO;
 import com.example.movieticketbookingbe.model.User;
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +27,6 @@ public interface UserService {
     boolean existsByPhoneNumber(String phoneNumber);
 
     boolean existsByUsername(String username);
+
+    User patchUser(Long id, UserPatchDTO patchDTO);
 }

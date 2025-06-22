@@ -9,6 +9,7 @@ import com.example.movieticketbookingbe.dto.seattype.SeatTypeCreateDTO;
 import com.example.movieticketbookingbe.dto.SeatTypeDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import com.example.movieticketbookingbe.mapper.SeatTypeMapper;
+import com.example.movieticketbookingbe.dto.seattype.SeatTypePatchDTO;
 
 import java.util.List;
 
@@ -22,35 +23,40 @@ public class SeatTypeController {
     public ResponseEntity<ApiResponseDTO<SeatTypeDTO>> createSeatType(@RequestBody SeatTypeCreateDTO seatTypeCreateDTO) {
         SeatType seatType = SeatTypeMapper.toEntity(seatTypeCreateDTO);
         SeatTypeDTO dto = SeatTypeMapper.toDTO(seatTypeService.createSeatType(seatType));
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Seat type created successfully", dto));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Tạo loại ghế thành công", dto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<SeatType> updateSeatType(@PathVariable Long id, @RequestBody SeatType seatType) {
-        return ResponseEntity.ok(seatTypeService.updateSeatType(id, seatType));
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<SeatTypeDTO>> patchSeatType(
+            @PathVariable Long id,
+            @RequestBody SeatTypePatchDTO patchDTO) {
+        SeatTypeDTO dto = SeatTypeMapper.toDTO(seatTypeService.patchSeatType(id, patchDTO));
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Cập nhật loại ghế thành công", dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSeatType(@PathVariable Long id) {
+    public ResponseEntity<ApiResponseDTO<Void>> deleteSeatType(@PathVariable Long id) {
         seatTypeService.deleteSeatType(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Xóa loại ghế thành công", null));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SeatType> getSeatTypeById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponseDTO<SeatTypeDTO>> getSeatTypeById(@PathVariable Long id) {
         return seatTypeService.getSeatTypeById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(seatType -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Tìm thấy loại ghế", SeatTypeMapper.toDTO(seatType))))
+                .orElse(ResponseEntity.ok(new ApiResponseDTO<>(404, "Không tìm thấy loại ghế", null)));
     }
 
     @GetMapping
-    public ResponseEntity<List<SeatType>> getAllSeatTypes() {
-        return ResponseEntity.ok(seatTypeService.getAllSeatTypes());
+    public ResponseEntity<ApiResponseDTO<List<SeatTypeDTO>>> getAllSeatTypes() {
+        List<SeatTypeDTO> dtos = seatTypeService.getAllSeatTypes().stream().map(SeatTypeMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách loại ghế thành công", dtos));
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<SeatType>> getActiveSeatTypes() {
-        return ResponseEntity.ok(seatTypeService.getActiveSeatTypes());
+    public ResponseEntity<ApiResponseDTO<List<SeatTypeDTO>>> getActiveSeatTypes() {
+        List<SeatTypeDTO> dtos = seatTypeService.getActiveSeatTypes().stream().map(SeatTypeMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách loại ghế đang hoạt động thành công", dtos));
     }
 
     @GetMapping("/check-name")

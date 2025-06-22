@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.service;
 
 import com.example.movieticketbookingbe.model.Movie;
+import com.example.movieticketbookingbe.dto.movie.MoviePatchDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,4 +33,6 @@ public interface MovieService {
     List<Movie> getLatestMovies();
 
     List<Movie> getTopRatedMovies();
+
+    Movie patchMovie(Long id, MoviePatchDTO patchDTO);
 }

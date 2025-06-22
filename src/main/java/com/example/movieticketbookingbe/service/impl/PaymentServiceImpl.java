@@ -76,4 +76,19 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(Payment.PaymentStatus.REFUNDED);
         return paymentRepository.save(payment);
     }
+
+    @Override
+    public Payment patchPayment(Long id, PaymentPatchDTO patchDTO) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+        if (patchDTO.getBookingId() != null) {
+            // TODO: set booking entity nếu cần
+        }
+        if (patchDTO.getAmount() != null) payment.setAmount(patchDTO.getAmount());
+        if (patchDTO.getMethod() != null) payment.setMethod(patchDTO.getMethod());
+        if (patchDTO.getStatus() != null) payment.setStatus(patchDTO.getStatus());
+        if (patchDTO.getPaymentTime() != null) payment.setPaymentTime(patchDTO.getPaymentTime());
+        if (patchDTO.getIsActive() != null) payment.setIsActive(patchDTO.getIsActive());
+        return paymentRepository.save(payment);
+    }
 }

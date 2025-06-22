@@ -7,6 +7,7 @@ import com.example.movieticketbookingbe.model.Booking.BookingFoodInfo;
 import com.example.movieticketbookingbe.service.BookingService;
 import com.example.movieticketbookingbe.dto.BookingDTO;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.dto.BookingPatchDTO;
 import com.example.movieticketbookingbe.mapper.BookingMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -50,11 +51,11 @@ public class BookingController {
             @ApiResponse(responseCode = "404", description = "Booking not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDTO<BookingDTO>> updateBooking(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<BookingDTO>> patchBooking(
             @Parameter(description = "ID of the booking to update") @PathVariable Long id,
-            @RequestBody Booking booking) {
-        BookingDTO dto = BookingMapper.toDTO(bookingService.updateBooking(id, booking));
+            @RequestBody BookingPatchDTO patchDTO) {
+        BookingDTO dto = BookingMapper.toDTO(bookingService.patchBooking(id, patchDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking updated successfully", dto));
     }
 

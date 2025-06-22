@@ -10,18 +10,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "staff")
+@Table(name = "theater_owner")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Staff {
+public class TheaterOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theater_id", nullable = false)
-    private Theater theater;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

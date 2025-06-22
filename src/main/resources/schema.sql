@@ -30,7 +30,8 @@ CREATE TABLE theaters (
     closing_time TIME,
     total_screens INTEGER,
     created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP,
+    theater_owner_id BIGINT
 );
 
 -- Create screens table
@@ -173,11 +174,10 @@ CREATE TABLE vouchers (
     updated_at TIMESTAMP
 );
 
--- Create staff table
-CREATE TABLE staff (
+-- Create theater_owner table
+CREATE TABLE theater_owner (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id),
-    theater_id BIGINT NOT NULL REFERENCES theaters(id),
     position VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP,
@@ -196,4 +196,19 @@ CREATE INDEX idx_bookings_showtime_id ON bookings(showtime_id);
 CREATE INDEX idx_booking_seats_booking_id ON booking_seats(booking_id);
 CREATE INDEX idx_booking_seats_seat_id ON booking_seats(seat_id);
 CREATE INDEX idx_seats_screen_id ON seats(screen_id);
-CREATE INDEX idx_screens_theater_id ON screens(theater_id); 
+CREATE INDEX idx_screens_theater_id ON screens(theater_id);
+CREATE INDEX idx_theaters_theater_owner_id ON theaters(theater_owner_id);
+
+-- === MIGRATION: Staff -> TheaterOwner ===
+-- Đổi tên bảng staff thành theater_owner
+ALTER TABLE staff RENAME TO theater_owner;
+
+-- Xóa cột theater_id khỏi bảng theater_owner
+ALTER TABLE theater_owner DROP COLUMN theater_id;
+
+-- Thêm cột theater_owner_id vào bảng theaters
+ALTER TABLE theaters ADD CONSTRAINT fk_theater_owner FOREIGN KEY (theater_owner_id) REFERENCES theater_owner(id);
+
+-- Xóa cột position và salary khỏi bảng theater_owner
+ALTER TABLE theater_owner DROP COLUMN IF EXISTS position;
+ALTER TABLE theater_owner DROP COLUMN IF EXISTS salary; 

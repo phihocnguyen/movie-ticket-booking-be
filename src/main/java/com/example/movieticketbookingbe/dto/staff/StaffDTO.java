@@ -1,12 +1,11 @@
-package com.example.movieticketbookingbe.dto.staff;
+package com.example.movieticketbookingbe.dto.theaterowner;
 
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class StaffDTO {
+public class TheaterOwnerDTO {
     private Long id;
-    private Long theaterId;
     private Long userId;
     private String position;
     private Double salary;

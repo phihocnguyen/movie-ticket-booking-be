@@ -26,4 +26,6 @@ public interface ScreenService {
     List<Screen> searchScreens(String screenName, Long theaterId);
 
     boolean existsByScreenName(String screenName);
+
+    Screen patchScreen(Long id, com.example.movieticketbookingbe.dto.screen.ScreenPatchDTO patchDTO);
 }
