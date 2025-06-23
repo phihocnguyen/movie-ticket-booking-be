@@ -12,6 +12,7 @@ public class MovieMapper {
         MovieDTO dto = new MovieDTO();
         dto.setId(movie.getId());
         dto.setTitle(movie.getTitle());
+        dto.setTitleVi(movie.getTitleVi());
         dto.setDescription(movie.getDescription());
         dto.setDirector(movie.getDirector());
         dto.setActor(movie.getActor());
@@ -21,7 +22,12 @@ public class MovieMapper {
         dto.setLanguage(movie.getLanguage());
         dto.setCountry(movie.getCountry());
         dto.setPosterUrl(movie.getPosterUrl());
+        dto.setBackdropUrl(movie.getBackdropUrl());
+        dto.setTrailerUrl(movie.getTrailerUrl());
+        dto.setRating(movie.getRating());
         dto.setIsActive(movie.getIsActive());
+        dto.setCreatedAt(movie.getCreatedAt());
+        dto.setUpdatedAt(movie.getUpdatedAt());
         dto.setShowtimes(movie.getShowtimes() != null ? movie.getShowtimes().stream().map(ShowtimeMapper::toDTO).collect(Collectors.toList()) : null);
         return dto;
     }

@@ -15,4 +15,5 @@ public class UserPatchDTO {
     private String role;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
+    private String password;
 } 

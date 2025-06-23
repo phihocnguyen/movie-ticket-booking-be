@@ -9,6 +9,7 @@ import com.example.movieticketbookingbe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
     @Override
     public User createUser(User user) {
         return userRepository.save(user);
@@ -108,6 +109,7 @@ public class UserServiceImpl implements UserService {
         if (patchDTO.getIsActive() != null) user.setIsActive(patchDTO.getIsActive());
         if (patchDTO.getRole() != null) user.setRole(User.UserRole.valueOf(patchDTO.getRole().toUpperCase()));
         if (patchDTO.getDateOfBirth() != null) user.setDateOfBirth(patchDTO.getDateOfBirth());
+        if (patchDTO.getPassword() != null) user.setPassword(passwordEncoder.encode(patchDTO.getPassword()));
         return userRepository.save(user);
     }
 }
