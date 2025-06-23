@@ -1,12 +1,13 @@
 package com.example.movieticketbookingbe.service;
 
 import com.example.movieticketbookingbe.model.Showtime;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeCreateDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ShowtimeService {
-    Showtime createShowtime(Showtime showtime);
+    Showtime createShowtime(ShowtimeCreateDTO createDTO);
 
     Showtime updateShowtime(Long id, Showtime showtime);
 

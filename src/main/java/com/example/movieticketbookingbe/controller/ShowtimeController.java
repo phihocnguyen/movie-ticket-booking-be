@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.controller;
 import com.example.movieticketbookingbe.model.Showtime;
 import com.example.movieticketbookingbe.service.ShowtimeService;
 import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeCreateDTO;
 import com.example.movieticketbookingbe.dto.showtime.ShowtimePatchDTO;
 import com.example.movieticketbookingbe.mapper.ShowtimeMapper;
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
@@ -20,8 +21,8 @@ public class ShowtimeController {
     private final ShowtimeService showtimeService;
 
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<ShowtimeDTO>> createShowtime(@RequestBody Showtime showtime) {
-        ShowtimeDTO dto = ShowtimeMapper.toDTO(showtimeService.createShowtime(showtime));
+    public ResponseEntity<ApiResponseDTO<ShowtimeDTO>> createShowtime(@RequestBody ShowtimeCreateDTO createDTO) {
+        ShowtimeDTO dto = ShowtimeMapper.toDTO(showtimeService.createShowtime(createDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtime created successfully", dto));
     }
 

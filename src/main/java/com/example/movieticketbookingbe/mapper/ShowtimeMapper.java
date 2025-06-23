@@ -5,6 +5,8 @@ import com.example.movieticketbookingbe.dto.showtime.ShowtimeCreateDTO;
 import com.example.movieticketbookingbe.model.Showtime;
 import com.example.movieticketbookingbe.dto.movie.MovieDTO;
 import com.example.movieticketbookingbe.dto.screen.ScreenDTO;
+import com.example.movieticketbookingbe.dto.theater.TheaterDTO;
+import com.example.movieticketbookingbe.mapper.TheaterMapper;
 
 public class ShowtimeMapper {
     public static ShowtimeDTO toDTO(Showtime showtime) {
@@ -13,6 +15,7 @@ public class ShowtimeMapper {
         dto.setId(showtime.getId());
         dto.setMovie(showtime.getMovie() != null ? MovieMapper.toDTO(showtime.getMovie()) : null);
         dto.setScreen(showtime.getScreen() != null ? ScreenMapper.toDTO(showtime.getScreen()) : null);
+        dto.setTheater(showtime.getTheater() != null ? TheaterMapper.toDTO(showtime.getTheater()) : null);
         dto.setStartTime(showtime.getStartTime());
         dto.setEndTime(showtime.getEndTime());
         dto.setIsActive(showtime.getIsActive());

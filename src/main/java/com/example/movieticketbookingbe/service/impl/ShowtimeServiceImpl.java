@@ -4,6 +4,7 @@ import com.example.movieticketbookingbe.model.*;
 import com.example.movieticketbookingbe.repository.*;
 import com.example.movieticketbookingbe.service.ShowtimeService;
 import com.example.movieticketbookingbe.dto.showtime.ShowtimePatchDTO;
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeCreateDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,24 +23,33 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     private final TheaterRepository theaterRepository;
 
     @Override
-    public Showtime createShowtime(Showtime showtime) {
+    public Showtime createShowtime(ShowtimeCreateDTO createDTO) {
         // Validate movie exists
-        Movie movie = movieRepository.findById(showtime.getMovieId())
+        Movie movie = movieRepository.findById(createDTO.getMovieId())
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
 
         // Validate theater exists
-        Theater theater = theaterRepository.findById(showtime.getTheaterId())
+        Theater theater = theaterRepository.findById(createDTO.getTheaterId())
                 .orElseThrow(() -> new RuntimeException("Theater not found"));
 
         // Validate screen exists and belongs to the specified theater
-        Screen screen = screenRepository.findById(showtime.getScreenId())
+        Screen screen = screenRepository.findById(createDTO.getScreenId())
                 .orElseThrow(() -> new RuntimeException("Screen not found"));
 
-        if (!screen.getTheater().getId().equals(showtime.getTheaterId())) {
+        if (!screen.getTheater().getId().equals(createDTO.getTheaterId())) {
             throw new RuntimeException("Screen does not belong to the specified theater");
         }
 
         // Validate time conflicts
+        Showtime showtime = new Showtime();
+        showtime.setMovieId(createDTO.getMovieId());
+        showtime.setTheaterId(createDTO.getTheaterId());
+        showtime.setScreenId(createDTO.getScreenId());
+        showtime.setStartTime(createDTO.getStartTime());
+        showtime.setEndTime(createDTO.getEndTime());
+        showtime.setPrice(createDTO.getPrice());
+        showtime.setIsActive(createDTO.getIsActive());
+
         validateTimeConflicts(showtime);
 
         showtime.setMovie(movie);
