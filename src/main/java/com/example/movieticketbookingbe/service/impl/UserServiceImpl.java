@@ -107,6 +107,7 @@ public class UserServiceImpl implements UserService {
         if (patchDTO.getAddress() != null) user.setAddress(patchDTO.getAddress());
         if (patchDTO.getIsActive() != null) user.setIsActive(patchDTO.getIsActive());
         if (patchDTO.getRole() != null) user.setRole(User.UserRole.valueOf(patchDTO.getRole().toUpperCase()));
+        if (patchDTO.getDateOfBirth() != null) user.setDateOfBirth(patchDTO.getDateOfBirth());
         return userRepository.save(user);
     }
 }

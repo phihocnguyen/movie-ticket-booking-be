@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.dto.auth;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.time.LocalDate;
 
@@ -10,5 +11,8 @@ public class RegisterRequest {
     private String email;
     private String phoneNumber;
     private String fullName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
+
+
 }
