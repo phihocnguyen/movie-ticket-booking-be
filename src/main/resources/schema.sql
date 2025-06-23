@@ -165,6 +165,8 @@ CREATE TABLE vouchers (
     code VARCHAR(255) NOT NULL UNIQUE,
     description TEXT NOT NULL,
     discount_amount DECIMAL(10,2) NOT NULL,
+    min_price DECIMAL(10,2),
+    type VARCHAR(20) CHECK (type IN ('new_user', 'seasonal')),
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
     max_uses INTEGER NOT NULL,
@@ -182,6 +184,17 @@ CREATE TABLE theater_owner (
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP,
     updated_at TIMESTAMP
+);
+
+-- Create user_vouchers table
+CREATE TABLE user_vouchers (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    voucher_id BIGINT NOT NULL REFERENCES vouchers(id),
+    is_used BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    UNIQUE (user_id, voucher_id)
 );
 
 -- Add indexes for better query performance
@@ -212,3 +225,7 @@ ALTER TABLE theaters ADD CONSTRAINT fk_theater_owner FOREIGN KEY (theater_owner_
 -- Xóa cột position và salary khỏi bảng theater_owner
 ALTER TABLE theater_owner DROP COLUMN IF EXISTS position;
 ALTER TABLE theater_owner DROP COLUMN IF EXISTS salary; 
+
+ALTER TABLE vouchers
+ADD COLUMN min_price DECIMAL(10,2),
+ADD COLUMN type VARCHAR(20) CHECK (type IN ('new_user', 'seasonal'));
