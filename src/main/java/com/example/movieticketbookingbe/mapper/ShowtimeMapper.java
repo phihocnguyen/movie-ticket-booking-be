@@ -18,6 +18,7 @@ public class ShowtimeMapper {
         dto.setTheater(showtime.getTheater() != null ? TheaterMapper.toDTO(showtime.getTheater()) : null);
         dto.setStartTime(showtime.getStartTime());
         dto.setEndTime(showtime.getEndTime());
+        dto.setPrice(showtime.getPrice());
         dto.setIsActive(showtime.getIsActive());
         dto.setCreatedAt(showtime.getCreatedAt());
         dto.setUpdatedAt(showtime.getUpdatedAt());

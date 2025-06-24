@@ -17,4 +17,5 @@ public class TheaterCreateDTO {
     private LocalTime openingTime;
     private LocalTime closingTime;
     private Integer totalScreens;
+    private Long theaterOwnerId;
 } 

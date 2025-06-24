@@ -28,4 +28,6 @@ public interface ScreenService {
     boolean existsByScreenName(String screenName);
 
     Screen patchScreen(Long id, com.example.movieticketbookingbe.dto.screen.ScreenPatchDTO patchDTO);
+
+    List<Screen> getScreensByTheaterId(Long theaterId);
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class TheaterOwnerServiceImpl implements TheaterOwnerService {
     private final TheaterOwnerRepository theaterOwnerRepository;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public TheaterOwner createTheaterOwner(TheaterOwner owner) {
@@ -88,6 +90,7 @@ public class TheaterOwnerServiceImpl implements TheaterOwnerService {
         UserCreateDTO userCreateDTO = dto.getUser();
         User user = UserMapper.toEntity(userCreateDTO);
         user = userService.createUser(user);
+        user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
         TheaterOwner owner = new TheaterOwner();
         owner.setUser(user);
         TheaterOwner savedOwner = theaterOwnerRepository.save(owner);

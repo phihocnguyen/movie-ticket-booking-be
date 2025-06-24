@@ -91,38 +91,59 @@ public class ScreenServiceImpl implements ScreenService {
 
     private void createSeatsForScreen(Screen screen, List<SeatType> seatTypes) {
         int totalSeats = screen.getTotalSeats();
-        int rows = 11; // A to K
-        int seatsPerRow = totalSeats / rows;
-        int remainingSeats = totalSeats % rows;
+        int standardSeats = (int) Math.round(totalSeats * 0.3); // 30%
+        int vipSeats = (int) Math.round(totalSeats * 0.6); // 60%
+        int coupleSeats = totalSeats - standardSeats - vipSeats; // 10% (đảm bảo tổng đúng)
 
-        char[] rowLetters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K' };
         List<Seat> seats = new ArrayList<>();
+        char row = 'A';
+        int seatNumber = 1;
+        int maxSeatsPerRow = 10; // Giới hạn tối đa 10 cột mỗi hàng
 
-        for (int i = 0; i < rows; i++) {
-            int seatsInThisRow = seatsPerRow;
-            if (i == rows - 1) {
-                seatsInThisRow += remainingSeats; // Add remaining seats to last row
-            }
-
-            for (int j = 1; j <= seatsInThisRow; j++) {
-                Seat seat = new Seat();
-                seat.setScreen(screen);
-                seat.setSeatNumber(rowLetters[i] + String.format("%02d", j));
-
-                // Assign seat type based on row
-                if (i < 2) { // First two rows are VIP
-                    seat.setSeatType(seatTypes.get(1)); // VIP
-                } else if (i == rows - 1) { // Last row is Couple
-                    seat.setSeatType(seatTypes.get(2)); // Couple
-                } else {
-                    seat.setSeatType(seatTypes.get(0)); // Standard
-                }
-
-                seat.setIsActive(true);
-                seats.add(seat);
+        // Sinh ghế Standard trước (30%)
+        for (int i = 0; i < standardSeats; i++) {
+            Seat seat = new Seat();
+            seat.setScreen(screen);
+            seat.setSeatNumber(row + String.format("%02d", seatNumber));
+            seat.setSeatType(seatTypes.get(0)); // Standard
+            seat.setIsActive(true);
+            seats.add(seat);
+            seatNumber++;
+            if (seatNumber > maxSeatsPerRow) { 
+                row++; 
+                seatNumber = 1; 
             }
         }
-
+        
+        // Sau đó sinh ghế VIP (60%)
+        for (int i = 0; i < vipSeats; i++) {
+            Seat seat = new Seat();
+            seat.setScreen(screen);
+            seat.setSeatNumber(row + String.format("%02d", seatNumber));
+            seat.setSeatType(seatTypes.get(1)); // VIP
+            seat.setIsActive(true);
+            seats.add(seat);
+            seatNumber++;
+            if (seatNumber > maxSeatsPerRow) { 
+                row++; 
+                seatNumber = 1; 
+            }
+        }
+        
+        // Cuối cùng sinh ghế Couple (10%)
+        for (int i = 0; i < coupleSeats; i++) {
+            Seat seat = new Seat();
+            seat.setScreen(screen);
+            seat.setSeatNumber(row + String.format("%02d", seatNumber));
+            seat.setSeatType(seatTypes.get(2)); // Couple
+            seat.setIsActive(true);
+            seats.add(seat);
+            seatNumber++;
+            if (seatNumber > maxSeatsPerRow) { 
+                row++; 
+                seatNumber = 1; 
+            }
+        }
         seatRepository.saveAll(seats);
     }
 
@@ -198,5 +219,11 @@ public class ScreenServiceImpl implements ScreenService {
             // TODO: set theater entity nếu cần
         }
         return screenRepository.save(screen);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Screen> getScreensByTheaterId(Long theaterId) {
+        return screenRepository.findByTheaterId(theaterId);
     }
 }

@@ -12,6 +12,7 @@ public class ScreenDTO {
     private Integer totalSeats;
     private Boolean isActive;
     private Long theaterId;
+    private String theaterName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private TheaterDTO theater;

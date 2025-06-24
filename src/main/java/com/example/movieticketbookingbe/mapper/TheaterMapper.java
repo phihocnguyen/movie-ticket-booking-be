@@ -49,6 +49,7 @@ public class TheaterMapper {
         theater.setOpeningTime(dto.getOpeningTime());
         theater.setClosingTime(dto.getClosingTime());
         theater.setTotalScreens(dto.getTotalScreens());
+        theater.setTheaterOwnerId(dto.getTheaterOwnerId());
         return theater;
     }
 } 

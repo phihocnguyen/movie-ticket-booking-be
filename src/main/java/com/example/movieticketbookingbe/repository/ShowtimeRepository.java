@@ -40,6 +40,8 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
 
         List<Showtime> findByMovieIdAndStartTimeAfterAndIsActiveTrue(Long movieId, LocalDateTime dateTime);
 
+        List<Showtime> findByMovieIdAndStartTimeBetweenAndIsActiveTrue(Long movieId, LocalDateTime startTime, LocalDateTime endTime);
+
         List<Showtime> findByMovieIdAndTheaterIdAndStartTimeBetweenAndIsActiveTrue(
                         Long movieId, Long theaterId, LocalDateTime startTime, LocalDateTime endTime);
 }

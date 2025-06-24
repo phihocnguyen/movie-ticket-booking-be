@@ -33,6 +33,8 @@ public interface ShowtimeService {
 
     List<Showtime> searchShowtimes(Long movieId, Long theaterId, LocalDateTime startTime, LocalDateTime endTime);
 
+    List<Showtime> filterShowtimesByDateAndMovie(Long movieId, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
     boolean existsByMovieIdAndScreenIdAndStartTime(Long movieId, Long screenId, LocalDateTime startTime);
 
     Showtime patchShowtime(Long id, com.example.movieticketbookingbe.dto.showtime.ShowtimePatchDTO patchDTO);

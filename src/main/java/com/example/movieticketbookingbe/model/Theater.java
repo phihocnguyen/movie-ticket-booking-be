@@ -59,7 +59,7 @@ public class Theater {
     private List<TheaterFoodInventory> foodInventories = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theater_owner_id")
+    @JoinColumn(name = "theater_owner_id", insertable = false, updatable = false)
     private TheaterOwner theaterOwner;
 
     private LocalTime openingTime;
@@ -67,6 +67,9 @@ public class Theater {
     private LocalTime closingTime;
 
     private Integer totalScreens;
+
+    @Column(name = "theater_owner_id")
+    private Long theaterOwnerId;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

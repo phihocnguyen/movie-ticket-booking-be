@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -75,6 +77,31 @@ public class ShowtimeController {
     public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getShowtimesByTheaterId(@PathVariable Long theaterId) {
         List<ShowtimeDTO> dtos = showtimeService.getShowtimesByTheaterId(theaterId).stream().map(ShowtimeMapper::toDTO).toList();
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> filterShowtimesByDateAndMovie(
+            @RequestParam(required = false) Long movieId,
+            @RequestParam(required = false) String date) {
+        
+        LocalDateTime startOfDay = null;
+        LocalDateTime endOfDay = null;
+        
+        if (date != null && !date.trim().isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate localDate = LocalDate.parse(date, formatter);
+                startOfDay = localDate.atStartOfDay();
+                endOfDay = localDate.atTime(23, 59, 59);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest()
+                    .body(new ApiResponseDTO<>(400, "Invalid date format. Use dd/MM/yyyy", null));
+            }
+        }
+        
+        List<ShowtimeDTO> dtos = showtimeService.filterShowtimesByDateAndMovie(movieId, startOfDay, endOfDay)
+            .stream().map(ShowtimeMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes filtered successfully", dtos));
     }
 
     @GetMapping("/search")

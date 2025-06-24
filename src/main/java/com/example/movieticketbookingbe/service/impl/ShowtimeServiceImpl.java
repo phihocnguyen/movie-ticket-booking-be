@@ -50,6 +50,11 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         showtime.setPrice(createDTO.getPrice());
         showtime.setIsActive(createDTO.getIsActive());
 
+        // Set timestamps
+        LocalDateTime now = LocalDateTime.now();
+        showtime.setCreatedAt(now);
+        showtime.setUpdatedAt(now);
+
         validateTimeConflicts(showtime);
 
         showtime.setMovie(movie);
@@ -89,6 +94,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         showtime.setEndTime(showtimeDetails.getEndTime());
         showtime.setPrice(showtimeDetails.getPrice());
         showtime.setIsActive(showtimeDetails.getIsActive());
+
+        // Update timestamp
+        showtime.setUpdatedAt(LocalDateTime.now());
 
         return showtimeRepository.save(showtime);
     }
@@ -164,6 +172,24 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Showtime> filterShowtimesByDateAndMovie(Long movieId, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        if (movieId != null && startOfDay != null && endOfDay != null) {
+            // Filter by both movieId and date range
+            return showtimeRepository.findByMovieIdAndStartTimeBetweenAndIsActiveTrue(movieId, startOfDay, endOfDay);
+        } else if (movieId != null) {
+            // Filter by movieId only
+            return showtimeRepository.findByMovieIdAndIsActiveTrue(movieId);
+        } else if (startOfDay != null && endOfDay != null) {
+            // Filter by date range only
+            return showtimeRepository.findByStartTimeBetweenAndIsActiveTrue(startOfDay, endOfDay);
+        } else {
+            // No filters, return all active showtimes
+            return showtimeRepository.findByIsActiveTrue();
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public boolean existsByMovieIdAndScreenIdAndStartTime(Long movieId, Long screenId, LocalDateTime startTime) {
         return showtimeRepository.existsByMovieIdAndScreenIdAndStartTime(movieId, screenId, startTime);
     }
@@ -182,6 +208,10 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         if (patchDTO.getScreenId() != null) {
             // TODO: set screen entity nếu cần
         }
+        
+        // Update timestamp
+        showtime.setUpdatedAt(LocalDateTime.now());
+        
         return showtimeRepository.save(showtime);
     }
 

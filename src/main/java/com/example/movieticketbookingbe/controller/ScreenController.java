@@ -94,15 +94,6 @@ public class ScreenController {
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of active screens retrieved successfully", dtos));
     }
 
-    @Operation(summary = "Get screens by theater", description = "Returns a list of screens for a specific theater")
-    @ApiResponse(responseCode = "200", description = "List of theater's screens retrieved successfully")
-    @GetMapping("/theater/{theaterId}")
-    public ResponseEntity<ApiResponseDTO<List<ScreenDTO>>> getScreensByTheater(
-            @Parameter(description = "ID of the theater") @PathVariable Long theaterId) {
-        List<ScreenDTO> dtos = screenService.getScreensByTheater(theaterId).stream().map(ScreenMapper::toDTO).toList();
-        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of theater's screens retrieved successfully", dtos));
-    }
-
     @Operation(summary = "Check if screen name exists", description = "Checks if a screen name is already taken in a theater")
     @ApiResponse(responseCode = "200", description = "Screen name check completed successfully")
     @GetMapping("/check-name")
@@ -110,5 +101,11 @@ public class ScreenController {
             @Parameter(description = "Screen name to check") @RequestParam String screenName,
             @Parameter(description = "ID of the theater") @RequestParam Long theaterId) {
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Screen name check completed successfully", screenService.existsByScreenNameAndTheater(screenName, theaterId)));
+    }
+
+    @GetMapping("/theater/{theaterId}")
+    public ResponseEntity<List<ScreenDTO>> getScreensByTheaterId(@PathVariable Long theaterId) {
+        List<ScreenDTO> dtos = screenService.getScreensByTheaterId(theaterId).stream().map(ScreenMapper::toDTO).toList();
+        return ResponseEntity.ok(dtos);
     }
 }

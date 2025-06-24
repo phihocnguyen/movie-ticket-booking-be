@@ -36,4 +36,6 @@ public interface TheaterService {
     boolean existsByPhoneNumber(String phoneNumber);
 
     Theater patchTheater(Long id, TheaterPatchDTO patchDTO);
+
+    List<Theater> getTheatersByTheaterOwnerId(Long theaterOwnerId);
 }

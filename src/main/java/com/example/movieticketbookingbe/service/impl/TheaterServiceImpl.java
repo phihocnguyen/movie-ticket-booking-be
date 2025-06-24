@@ -114,4 +114,10 @@ public class TheaterServiceImpl implements TheaterService {
         if (patchDTO.getIsActive() != null) theater.setIsActive(patchDTO.getIsActive());
         return theaterRepository.save(theater);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Theater> getTheatersByTheaterOwnerId(Long theaterOwnerId) {
+        return theaterRepository.findByTheaterOwnerId(theaterOwnerId);
+    }
 }

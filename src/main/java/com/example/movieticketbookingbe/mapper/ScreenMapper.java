@@ -12,7 +12,13 @@ public class ScreenMapper {
         dto.setId(screen.getId());
         dto.setScreenName(screen.getScreenName());
         dto.setTotalSeats(screen.getTotalSeats());
+        dto.setScreenType(screen.getScreenType());
+        dto.setIsActive(screen.getIsActive());
+        dto.setTheaterId(screen.getTheaterId());
+        dto.setCreatedAt(screen.getCreatedAt());
+        dto.setUpdatedAt(screen.getUpdatedAt());
         dto.setTheater(screen.getTheater() != null ? TheaterMapper.toDTO(screen.getTheater()) : null);
+        dto.setTheaterName(screen.getTheater() != null ? screen.getTheater().getName() : null);
         return dto;
     }
 

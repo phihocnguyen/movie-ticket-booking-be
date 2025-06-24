@@ -6,6 +6,7 @@ import com.example.movieticketbookingbe.dto.theater.TheaterDTO;
 import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
 import com.example.movieticketbookingbe.dto.theater.TheaterPatchDTO;
 import com.example.movieticketbookingbe.mapper.TheaterMapper;
+import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -125,5 +126,13 @@ public class TheaterController {
     public ResponseEntity<Boolean> checkPhoneExists(
             @Parameter(description = "Theater phone number to check") @RequestParam String phoneNumber) {
         return ResponseEntity.ok(theaterService.existsByPhoneNumber(phoneNumber));
+    }
+
+    @Operation(summary = "Get theaters by theater owner ID", description = "Returns a list of theaters by theater owner ID")
+    @ApiResponse(responseCode = "200", description = "List of theaters retrieved successfully")
+    @GetMapping("/theater-owner")
+    public ResponseEntity<ApiResponseDTO<List<TheaterDTO>>> getTheatersByTheaterOwnerId(@RequestParam Long theaterOwnerId) {
+        List<TheaterDTO> dtos = theaterService.getTheatersByTheaterOwnerId(theaterOwnerId).stream().map(TheaterMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Theaters by owner", dtos));
     }
 }
