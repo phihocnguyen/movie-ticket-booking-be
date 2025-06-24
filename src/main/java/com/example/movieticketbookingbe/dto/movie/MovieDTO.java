@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.dto.movie;
 
+import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public class MovieDTO {
     private Integer duration;
     private String language;
     private String genre;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
     private String posterUrl;
     private String backdropUrl;

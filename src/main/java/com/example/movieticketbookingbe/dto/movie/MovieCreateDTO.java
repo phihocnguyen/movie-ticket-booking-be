@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.dto.movie;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ public class MovieCreateDTO {
     private Integer duration;
     private String language;
     private String genre;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
     private String posterUrl;
     private String backdropUrl;
