@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,10 +30,10 @@ public class Voucher {
     private String type; // 'new_user', 'seasonal'
 
     @Column(name = "start_date", nullable = false)
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "max_uses", nullable = false)
     private Integer maxUses;

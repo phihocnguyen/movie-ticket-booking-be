@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.dto.movie;
 
 import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
