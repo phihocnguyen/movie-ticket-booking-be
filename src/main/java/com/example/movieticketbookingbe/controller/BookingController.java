@@ -18,12 +18,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.movieticketbookingbe.dto.ApiResponseDTO;
+import com.example.movieticketbookingbe.service.PaymentService;
+import com.example.movieticketbookingbe.service.VnpayService;
+import com.example.movieticketbookingbe.model.Payment;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -31,6 +36,11 @@ import com.example.movieticketbookingbe.dto.ApiResponseDTO;
 @Tag(name = "Booking", description = "Booking management APIs")
 public class BookingController {
     private final BookingService bookingService;
+    private final PaymentService paymentService;
+    private final VnpayService vnpayService;
+
+    @Value("${vnpay.return-url}")
+    private String vnpayReturnUrl;
 
     @PostMapping
     @Operation(summary = "Create a new booking", description = "Creates a new booking with seats and foods")
@@ -39,10 +49,30 @@ public class BookingController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<ApiResponseDTO<BookingDTO>> createBooking(
-            @Parameter(description = "Booking request data", required = true) @RequestBody BookingRequestDTO bookingRequest) {
+    public ResponseEntity<ApiResponseDTO<?>> createBooking(
+            @Parameter(description = "Booking request data", required = true) @RequestBody BookingRequestDTO bookingRequest,
+            @RequestParam String paymentMethod,
+            HttpServletRequest request) {
         Booking booking = BookingMapper.toEntity(bookingRequest);
-        BookingDTO dto = BookingMapper.toDTO(bookingService.createBooking(booking));
+        Booking savedBooking = bookingService.createBooking(booking);
+        // Tạo payment liên kết với booking
+        Payment payment = new Payment();
+        payment.setBooking(savedBooking);
+        payment.setAmount(savedBooking.getTotalAmount());
+        payment.setPaymentMethod(Payment.PaymentMethod.valueOf(paymentMethod));
+        payment.setStatus(Payment.PaymentStatus.PENDING.name());
+        payment.setIsActive(true);
+        Payment savedPayment = paymentService.createPayment(payment);
+        if ("VNPAY".equalsIgnoreCase(paymentMethod)) {
+            String clientIp = request.getHeader("X-Forwarded-For");
+            if (clientIp == null) clientIp = request.getRemoteAddr();
+            if ("0:0:0:0:0:0:0:1".equals(clientIp)) {
+                clientIp = "127.0.0.1";
+            }
+            String vnpayUrl = vnpayService.createVnpayPaymentUrl(savedBooking.getId(), savedBooking.getTotalAmount(), vnpayReturnUrl, clientIp);
+            return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking created, redirect to VNPAY", vnpayUrl));
+        }
+        BookingDTO dto = BookingMapper.toDTO(savedBooking);
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking created successfully", dto));
     }
 

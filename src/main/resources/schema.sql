@@ -134,7 +134,7 @@ CREATE TABLE payments (
     id BIGSERIAL PRIMARY KEY,
     booking_id BIGINT NOT NULL REFERENCES bookings(id) UNIQUE,
     amount DECIMAL(10,2) NOT NULL,
-    payment_method VARCHAR(20) NOT NULL CHECK (payment_method IN ('CREDIT_CARD', 'DEBIT_CARD', 'CASH', 'DIGITAL_WALLET', 'BANK_TRANSFER')),
+    payment_method VARCHAR(20) NOT NULL CHECK (payment_method IN ("CASH", "VNPAY")),
     status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'COMPLETED', 'FAILED', 'REFUNDED')),
     transaction_id VARCHAR(255),
     is_active BOOLEAN NOT NULL DEFAULT true,
@@ -229,3 +229,12 @@ ALTER TABLE theater_owner DROP COLUMN IF EXISTS salary;
 ALTER TABLE vouchers
 ADD COLUMN min_price DECIMAL(10,2),
 ADD COLUMN type VARCHAR(20) CHECK (type IN ('new_user', 'seasonal'));
+
+
+
+ALTER TABLE payments DROP CONSTRAINT IF EXISTS payments_payment_method_check;
+
+
+ALTER TABLE payments
+ADD CONSTRAINT payments_payment_method_check
+CHECK (payment_method IN ('CASH', 'VNPAY'));

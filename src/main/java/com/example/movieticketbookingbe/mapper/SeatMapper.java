@@ -13,7 +13,6 @@ public class SeatMapper {
         dto.setId(seat.getId());
         dto.setSeatNumber(seat.getSeatNumber());
         dto.setIsAvailable(seat.getIsAvailable());
-        dto.setScreen(seat.getScreen() != null ? ScreenMapper.toDTO(seat.getScreen()) : null);
         dto.setSeatType(seat.getSeatType() != null ? SeatTypeMapper.toDTO(seat.getSeatType()) : null);
         return dto;
     }

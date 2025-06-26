@@ -4,6 +4,7 @@ import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 public class MovieDTO {

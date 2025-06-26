@@ -46,11 +46,8 @@ public class Payment {
     private LocalDateTime updatedAt;
 
     public enum PaymentMethod {
-        CREDIT_CARD,
-        DEBIT_CARD,
         CASH,
-        DIGITAL_WALLET,
-        BANK_TRANSFER
+        VNPAY
     }
 
     public enum PaymentStatus {
