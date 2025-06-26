@@ -78,4 +78,11 @@ public class BlogServiceImpl implements BlogService {
         blog.setUpdatedAt(java.time.LocalDateTime.now());
         return blogRepository.save(blog);
     }
+
+    @Override
+    public Blog createBlog(Blog blog) {
+        blog.setCreatedAt(java.time.LocalDateTime.now());
+        blog.setUpdatedAt(java.time.LocalDateTime.now());
+        return blogRepository.save(blog);
+    }
 } 

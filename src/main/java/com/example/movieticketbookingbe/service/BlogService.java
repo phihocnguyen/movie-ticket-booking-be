@@ -10,4 +10,5 @@ public interface BlogService {
     void deleteBlog(Long id);
     Optional<Blog> getBlogById(Long id);
     List<Blog> getAllBlogs();
+    Blog patchBlog(Long id, com.example.movieticketbookingbe.dto.blog.BlogPatchDTO dto);
 } 
