@@ -17,7 +17,6 @@ import java.util.Optional;
 public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
 
-    @Override
     public Blog createBlog(BlogCreateDTO dto) {
         Blog blog = Blog.builder()
             .title(dto.getTitle())
