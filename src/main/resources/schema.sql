@@ -197,6 +197,20 @@ CREATE TABLE user_vouchers (
     UNIQUE (user_id, voucher_id)
 );
 
+-- Create blog table
+CREATE TABLE blog (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255),
+    content TEXT,
+    summary VARCHAR(1000),
+    thumbnail VARCHAR(500),
+    published BOOLEAN DEFAULT FALSE,
+    type VARCHAR(100),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
 -- Add indexes for better query performance
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_username ON users(username);
