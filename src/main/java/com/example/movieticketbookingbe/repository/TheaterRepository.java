@@ -1,6 +1,7 @@
 package com.example.movieticketbookingbe.repository;
 
 import com.example.movieticketbookingbe.model.Theater;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface TheaterRepository extends JpaRepository<Theater, Long> {
+    @EntityGraph(attributePaths = {"theaterOwner", "theaterOwner.user"})
     List<Theater> findByIsActiveTrue();
 
     List<Theater> findByCity(String city);
@@ -21,7 +23,7 @@ public interface TheaterRepository extends JpaRepository<Theater, Long> {
 
     List<Theater> findByNameContainingIgnoreCaseAndCityAndState(String name, String city, String state);
 
-    boolean existsByName(String name);
+    boolean existsByAddress(String address);
 
     boolean existsByEmail(String email);
 

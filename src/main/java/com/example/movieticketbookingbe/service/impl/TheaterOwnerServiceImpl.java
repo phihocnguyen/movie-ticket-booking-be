@@ -53,6 +53,12 @@ public class TheaterOwnerServiceImpl implements TheaterOwnerService {
 
     @Override
     @Transactional(readOnly = true)
+    public Optional<TheaterOwner> getTheaterOwnerByEmail(String Email) {
+        return theaterOwnerRepository.findByUserEmail(Email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<TheaterOwner> getAllTheaterOwners() {
         return theaterOwnerRepository.findAll();
     }

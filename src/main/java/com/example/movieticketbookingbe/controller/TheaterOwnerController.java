@@ -79,6 +79,13 @@ public class TheaterOwnerController {
                 .map(owner -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater owner found", TheaterOwnerMapper.toDTO(owner))))
                 .orElse(ResponseEntity.notFound().build());
     }
+    @GetMapping("/search/{email}")
+    public ResponseEntity<ApiResponseDTO<TheaterOwnerDTO>> getTheaterOwnerByEmail(
+            @Parameter(description = "Email of the theater owner to retrieve") @PathVariable String email) {
+        return theaterOwnerService.getTheaterOwnerByEmail(email)
+                .map(owner -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Theater owner found", TheaterOwnerMapper.toDTO(owner))))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @Operation(summary = "Get all theater owners", description = "Returns a list of all theater owners")
     @ApiResponse(responseCode = "200", description = "List of theater owners retrieved successfully")

@@ -12,6 +12,7 @@ public interface TheaterOwnerService {
     TheaterOwner updateTheaterOwner(Long id, TheaterOwner owner);
     void deleteTheaterOwner(Long id);
     Optional<TheaterOwner> getTheaterOwnerById(Long id);
+    Optional<TheaterOwner> getTheaterOwnerByEmail(String Email);
     List<TheaterOwner> getAllTheaterOwners();
     List<TheaterOwner> getActiveTheaterOwners();
     Optional<TheaterOwner> getTheaterOwnerByUser(Long userId);

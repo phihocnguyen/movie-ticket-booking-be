@@ -29,7 +29,7 @@ public interface TheaterService {
 
     List<Theater> searchTheaters(String name, String city, String state);
 
-    boolean existsByName(String name);
+    boolean existsByAddress(String address);
 
     boolean existsByEmail(String email);
 

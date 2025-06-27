@@ -85,8 +85,8 @@ public class TheaterServiceImpl implements TheaterService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existsByName(String name) {
-        return theaterRepository.existsByName(name);
+    public boolean existsByAddress(String address) {
+        return theaterRepository.existsByAddress(address);
     }
 
     @Override

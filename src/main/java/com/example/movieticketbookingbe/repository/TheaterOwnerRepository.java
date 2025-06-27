@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface TheaterOwnerRepository extends JpaRepository<TheaterOwner, Long> {
     List<TheaterOwner> findByIsActiveTrue();
     Optional<TheaterOwner> findByUserId(Long userId);
+    Optional<TheaterOwner> findByUserEmail(String Email);
     boolean existsByUserId(Long userId);
 } 
