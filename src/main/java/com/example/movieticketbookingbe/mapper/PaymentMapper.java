@@ -13,7 +13,16 @@ public class PaymentMapper {
         if (payment == null) return null;
         PaymentDTO dto = new PaymentDTO();
         dto.setId(payment.getId());
-        dto.setBooking(payment.getBooking() != null ? BookingMapper.toDTO(payment.getBooking()) : null);
+        if (payment.getBooking() != null) {
+            BookingDTO bookingDTO = new BookingDTO();
+            bookingDTO.setId(payment.getBooking().getId());
+            bookingDTO.setStatus(payment.getBooking().getStatus() != null ? payment.getBooking().getStatus().name() : null);
+            bookingDTO.setTotalAmount(payment.getBooking().getTotalAmount());
+            bookingDTO.setBookingTime(payment.getBooking().getBookingTime());
+            dto.setBooking(bookingDTO);
+        } else {
+            dto.setBooking(null);
+        }
         dto.setAmount(payment.getAmount());
         dto.setStatus(payment.getStatus());
         dto.setCreatedAt(payment.getCreatedAt());

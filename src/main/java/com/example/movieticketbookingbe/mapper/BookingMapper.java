@@ -19,7 +19,17 @@ public class BookingMapper {
         // dto.setUser(booking.getUser() != null ? UserMapper.toDTO(booking.getUser()) : null);
         dto.setShowtime(booking.getShowtime() != null ? ShowtimeMapper.toDTO(booking.getShowtime()) : null);
         // dto.setSeat(booking.getSeat() != null ? SeatMapper.toDTO(booking.getSeat()) : null);
-        dto.setPayment(booking.getPayment() != null ? PaymentMapper.toDTO(booking.getPayment()) : null);
+        if (booking.getPayment() != null) {
+            PaymentDTO paymentDTO = new PaymentDTO();
+            paymentDTO.setId(booking.getPayment().getId());
+            paymentDTO.setAmount(booking.getPayment().getAmount());
+            paymentDTO.setStatus(booking.getPayment().getStatus());
+            paymentDTO.setCreatedAt(booking.getPayment().getCreatedAt());
+            paymentDTO.setUpdatedAt(booking.getPayment().getUpdatedAt());
+            dto.setPayment(paymentDTO);
+        } else {
+            dto.setPayment(null);
+        }
         dto.setStatus(booking.getStatus() != null ? booking.getStatus().name() : null);
         dto.setBookingTime(booking.getBookingTime());
         dto.setCreatedAt(booking.getCreatedAt());
