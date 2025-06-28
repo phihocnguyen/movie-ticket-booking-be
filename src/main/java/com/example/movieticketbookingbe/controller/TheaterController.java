@@ -52,7 +52,7 @@ public class TheaterController {
     @PatchMapping("/{id}")
     public ResponseEntity< ApiResponseDTO<TheaterDTO>> patchTheater(
             @Parameter(description = "ID of the theater to update") @PathVariable Long id,
-            @RequestBody TheaterPatchDTO patchDTO) {
+            @RequestBody TheaterCreateDTO patchDTO) {
         TheaterDTO dto = TheaterMapper.toDTO(theaterService.patchTheater(id, patchDTO));
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Updated theater successfully", dto));
     }
@@ -118,10 +118,10 @@ public class TheaterController {
     @ApiResponse(responseCode = "200", description = "Address check completed successfully")
     @GetMapping("/check-address")
     public ResponseEntity<ApiResponseDTO<Boolean>> checkAddressExists(
-            @RequestParam String address) {
-        boolean exists = theaterService.existsByAddress(address.trim());
+            @RequestParam String address, @RequestParam Long theaterOwnerId) {
+        boolean exists = theaterService.existsByAddressAndOwner(address.trim(), theaterOwnerId);
         return ResponseEntity.ok(new ApiResponseDTO<>(200,
-                exists ? "Theater Address already exists" : "Theater Address is available", exists));
+                exists ? "Address already used by this owner" : "Address available", exists));
     }
     @Operation(summary = "Check if theater email exists", description = "Checks if a theater email is already registered")
     @ApiResponse(responseCode = "200", description = "Email check completed successfully")

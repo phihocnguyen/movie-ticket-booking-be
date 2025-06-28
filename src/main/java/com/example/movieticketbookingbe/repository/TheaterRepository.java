@@ -23,7 +23,7 @@ public interface TheaterRepository extends JpaRepository<Theater, Long> {
 
     List<Theater> findByNameContainingIgnoreCaseAndCityAndState(String name, String city, String state);
 
-    boolean existsByAddress(String address);
+    boolean existsByAddressAndTheaterOwnerId(String address, Long theaterOwnerId);
 
     boolean existsByEmail(String email);
 

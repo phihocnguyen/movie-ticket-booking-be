@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.service.impl;
 
+import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
 import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.repository.TheaterRepository;
 import com.example.movieticketbookingbe.service.TheaterService;
@@ -85,10 +86,9 @@ public class TheaterServiceImpl implements TheaterService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existsByAddress(String address) {
-        return theaterRepository.existsByAddress(address);
+    public boolean existsByAddressAndOwner(String address, Long ownerId) {
+        return theaterRepository.existsByAddressAndTheaterOwnerId(address, ownerId);
     }
-
     @Override
     @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
@@ -102,18 +102,27 @@ public class TheaterServiceImpl implements TheaterService {
     }
 
     @Override
-    public Theater patchTheater(Long id, TheaterPatchDTO patchDTO) {
+    public Theater patchTheater(Long id, TheaterCreateDTO patchDTO) {
         Theater theater = theaterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Theater not found"));
+
         if (patchDTO.getName() != null) theater.setName(patchDTO.getName());
         if (patchDTO.getAddress() != null) theater.setAddress(patchDTO.getAddress());
         if (patchDTO.getCity() != null) theater.setCity(patchDTO.getCity());
         if (patchDTO.getState() != null) theater.setState(patchDTO.getState());
+        if (patchDTO.getCountry() != null) theater.setCountry(patchDTO.getCountry());
+        if (patchDTO.getZipCode() != null) theater.setZipCode(patchDTO.getZipCode());
         if (patchDTO.getPhoneNumber() != null) theater.setPhoneNumber(patchDTO.getPhoneNumber());
         if (patchDTO.getEmail() != null) theater.setEmail(patchDTO.getEmail());
         if (patchDTO.getIsActive() != null) theater.setIsActive(patchDTO.getIsActive());
+        if (patchDTO.getOpeningTime() != null) theater.setOpeningTime(patchDTO.getOpeningTime());
+        if (patchDTO.getClosingTime() != null) theater.setClosingTime(patchDTO.getClosingTime());
+        if (patchDTO.getTotalScreens() != null) theater.setTotalScreens(patchDTO.getTotalScreens());
+        if (patchDTO.getTheaterOwnerId() != null) theater.setTheaterOwnerId(patchDTO.getTheaterOwnerId());
+
         return theaterRepository.save(theater);
     }
+
 
     @Override
     @Transactional(readOnly = true)

@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.service;
 
+import com.example.movieticketbookingbe.dto.theater.TheaterCreateDTO;
 import com.example.movieticketbookingbe.model.Theater;
 import com.example.movieticketbookingbe.dto.theater.TheaterPatchDTO;
 
@@ -29,13 +30,13 @@ public interface TheaterService {
 
     List<Theater> searchTheaters(String name, String city, String state);
 
-    boolean existsByAddress(String address);
+    boolean existsByAddressAndOwner(String address,Long ownerId);
 
     boolean existsByEmail(String email);
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    Theater patchTheater(Long id, TheaterPatchDTO patchDTO);
+    Theater patchTheater(Long id, TheaterCreateDTO patchDTO);
 
     List<Theater> getTheatersByTheaterOwnerId(Long theaterOwnerId);
 }
