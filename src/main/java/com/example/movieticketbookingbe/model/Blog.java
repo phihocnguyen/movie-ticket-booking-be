@@ -2,6 +2,8 @@ package com.example.movieticketbookingbe.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,8 +30,8 @@ public class Blog {
     private boolean published;
 
     private String type;
-
+    @Column(nullable = true)
+    private LocalDateTime postDay;
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 } 

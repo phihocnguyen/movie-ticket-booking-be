@@ -17,38 +17,6 @@ import java.util.Optional;
 public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
 
-    public Blog createBlog(BlogCreateDTO dto) {
-        Blog blog = Blog.builder()
-            .title(dto.getTitle())
-            .author(dto.getAuthor())
-            .content(dto.getContent())
-            .summary(dto.getSummary())
-            .thumbnail(dto.getThumbnail())
-            .published(dto.isPublished())
-            .type(dto.getType())
-            .createdAt(java.time.LocalDateTime.now())
-            .updatedAt(java.time.LocalDateTime.now())
-            .build();
-        return blogRepository.save(blog);
-    }
-
-    @Override
-    public Blog updateBlog(Long id, Blog blog) {
-        Optional<Blog> existing = blogRepository.findById(id);
-        if (existing.isPresent()) {
-            Blog b = existing.get();
-            b.setTitle(blog.getTitle());
-            b.setAuthor(blog.getAuthor());
-            b.setContent(blog.getContent());
-            b.setSummary(blog.getSummary());
-            b.setThumbnail(blog.getThumbnail());
-            b.setPublished(blog.isPublished());
-            b.setType(blog.getType());
-            b.setUpdatedAt(LocalDateTime.now());
-            return blogRepository.save(b);
-        }
-        throw new RuntimeException("Blog not found");
-    }
 
     @Override
     public void deleteBlog(Long id) {
@@ -66,22 +34,36 @@ public class BlogServiceImpl implements BlogService {
     }
 
     public Blog patchBlog(Long id, BlogPatchDTO dto) {
-        Blog blog = blogRepository.findById(id).orElseThrow(() -> new RuntimeException("Blog not found"));
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Blog not found"));
+
         if (dto.getTitle() != null) blog.setTitle(dto.getTitle());
         if (dto.getAuthor() != null) blog.setAuthor(dto.getAuthor());
         if (dto.getContent() != null) blog.setContent(dto.getContent());
         if (dto.getSummary() != null) blog.setSummary(dto.getSummary());
         if (dto.getThumbnail() != null) blog.setThumbnail(dto.getThumbnail());
-        if (dto.getPublished() != null) blog.setPublished(dto.getPublished());
         if (dto.getType() != null) blog.setType(dto.getType());
-        blog.setUpdatedAt(java.time.LocalDateTime.now());
+
+        // Nếu đang chưa được publish mà người dùng cập nhật thành publish thì gán ngày đăng
+        if (!blog.isPublished() && Boolean.TRUE.equals(dto.getPublished())) {
+            blog.setPostDay(LocalDateTime.now());
+        }
+
+        if (dto.getPublished() != null) blog.setPublished(dto.getPublished());
+
+        blog.setUpdatedAt(LocalDateTime.now());
         return blogRepository.save(blog);
     }
 
+
     @Override
     public Blog createBlog(Blog blog) {
-        blog.setCreatedAt(java.time.LocalDateTime.now());
-        blog.setUpdatedAt(java.time.LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        blog.setCreatedAt(now);
+        blog.setUpdatedAt(now);
+        if (blog.isPublished() && blog.getPostDay() == null) {
+            blog.setPostDay(now);
+        }
         return blogRepository.save(blog);
     }
 } 
