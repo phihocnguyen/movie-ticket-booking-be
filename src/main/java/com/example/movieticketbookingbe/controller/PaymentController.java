@@ -159,6 +159,7 @@ public class PaymentController {
 
     @GetMapping("/vnpay-return")
     public void vnpayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("=== VNPAY RETURN CALLED ===");
         Map<String, String[]> paramMap = request.getParameterMap();
         Map<String, String> vnpayParams = new HashMap<>();
         for (Map.Entry<String, String[]> entry : paramMap.entrySet()) {
@@ -169,7 +170,10 @@ public class PaymentController {
         if (vnpayParams.containsKey("vnp_TxnRef")) {
             try { bookingId = Long.valueOf(vnpayParams.get("vnp_TxnRef")); } catch (Exception ignored) {}
         }
+        System.out.println("[VNPAY RETURN] Params: " + vnpayParams);
+        System.out.println("[VNPAY RETURN] isValid: " + isValid + ", vnp_ResponseCode: " + vnpayParams.get("vnp_ResponseCode"));
         if (isValid && "00".equals(vnpayParams.get("vnp_ResponseCode"))) {
+            System.out.println("[VNPAY RETURN] SUCCESS branch entered");
             // Cập nhật trạng thái nếu cần (giống confirmVnpayPayment)
             Payment payment = paymentService.getPaymentByBooking(bookingId);
             payment.setStatus(Payment.PaymentStatus.COMPLETED.name());
@@ -180,7 +184,11 @@ public class PaymentController {
                 bookingService.updateBooking(booking.getId(), booking);
             }
             // Redirect sang trang success của backend
-            response.sendRedirect("http://localhost:3000/booking-success");
+            String feUrl = "http://localhost:3000/booking-success";
+            if (bookingId != null) {
+                feUrl += "?bookingId=" + bookingId;
+            }
+            response.sendRedirect(feUrl);
         } else {
             // Redirect sang trang fail của backend
             response.sendRedirect("/payment-fail");

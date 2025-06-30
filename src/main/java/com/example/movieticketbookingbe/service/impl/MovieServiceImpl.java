@@ -7,6 +7,9 @@ import com.example.movieticketbookingbe.dto.movie.MoviePatchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.movieticketbookingbe.event.MovieCreatedEvent;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,10 +20,17 @@ import java.util.Optional;
 @Transactional
 public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate; 
 
     @Override
     public Movie createMovie(Movie movie) {
-        return movieRepository.save(movie);
+        Movie savedMovie = movieRepository.save(movie);
+        System.out.println("[MovieServiceImpl] Saved movie: " + savedMovie);
+        MovieCreatedEvent event = new MovieCreatedEvent(savedMovie.getId(), savedMovie.getTitle());
+        
+        kafkaTemplate.send("movie-created-v2", event);
+        System.out.println("[MovieServiceImpl] Published event to Kafka: " + event);
+        return savedMovie;
     }
 
     @Override

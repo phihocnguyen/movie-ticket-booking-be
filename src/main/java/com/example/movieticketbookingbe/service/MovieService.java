@@ -1,7 +1,11 @@
 package com.example.movieticketbookingbe.service;
 
 import com.example.movieticketbookingbe.model.Movie;
+import com.example.movieticketbookingbe.dto.movie.MovieDTO;
 import com.example.movieticketbookingbe.dto.movie.MoviePatchDTO;
+import com.example.movieticketbookingbe.event.MovieCreatedEvent;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
