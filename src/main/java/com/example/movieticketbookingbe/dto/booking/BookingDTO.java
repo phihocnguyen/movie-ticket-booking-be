@@ -12,11 +12,14 @@ import java.util.List;
 public class BookingDTO {
     private Long id;
     private UserDTO user;
+    private Long userId;
     private ShowtimeDTO showtime;
     private SeatDTO seat;
     private PaymentDTO payment;
     private String status;
     private LocalDateTime bookingTime;
+    private Double totalTicketPrice;
+    private Double totalFoodPrice;
     private Double totalAmount;
     private Boolean isActive;
     private List<BookingSeatInfoDTO> bookingSeats;

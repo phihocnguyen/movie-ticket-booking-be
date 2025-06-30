@@ -6,9 +6,11 @@ import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Seat;
 import com.example.movieticketbookingbe.model.TheaterFoodInventory;
 import com.example.movieticketbookingbe.model.Booking.BookingStatus;
+import com.example.movieticketbookingbe.model.User;
 import com.example.movieticketbookingbe.repository.BookingRepository;
 import com.example.movieticketbookingbe.repository.SeatRepository;
 import com.example.movieticketbookingbe.repository.TheaterFoodInventoryRepository;
+import com.example.movieticketbookingbe.repository.UserRepository;
 import com.example.movieticketbookingbe.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final SeatRepository seatRepository;
     private final TheaterFoodInventoryRepository foodInventoryRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Booking createBooking(Booking booking) {
@@ -160,22 +164,69 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(BookingStatus.COMPLETED);
         return bookingRepository.save(booking);
     }
+    public List<Booking> getBookingsByOwner(Long ownerId) {
+        return bookingRepository.findAllByOwnerId(ownerId);
+    }
+    @Override
+    public Booking createBookingFromDTO(BookingRequestDTO dto) {
+        Booking booking = new Booking();
 
+        // Lấy user từ DB
+        if (dto.getUserId() != null) {
+            User user = userRepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+            booking.setUser(user);
+        }
+
+        booking.setShowtimeId(dto.getShowtimeId());
+        booking.setBookingTime(dto.getBookingTime());
+        booking.setTotalAmount(dto.getTotalAmount());
+        booking.setStatus(dto.getStatus());
+
+        if (dto.getBookingSeats() != null) {
+            booking.setBookingSeats(dto.getBookingSeats().stream().map(seatDTO -> {
+                Booking.BookingSeatInfo seatInfo = new Booking.BookingSeatInfo();
+                seatInfo.setSeatId(seatDTO.getSeatId());
+                seatInfo.setPrice(seatDTO.getPrice());
+                return seatInfo;
+            }).collect(Collectors.toList()));
+        }
+
+        if (dto.getBookingFoods() != null) {
+            booking.setBookingFoods(dto.getBookingFoods().stream().map(foodDTO -> {
+                Booking.BookingFoodInfo foodInfo = new Booking.BookingFoodInfo();
+                foodInfo.setFoodInventoryId(foodDTO.getFoodInventoryId());
+                foodInfo.setQuantity(foodDTO.getQuantity());
+                foodInfo.setPrice(foodDTO.getPrice());
+                return foodInfo;
+            }).collect(Collectors.toList()));
+        }
+
+        return createBooking(booking); // gọi lại logic cũ
+    }
     @Override
     public Booking patchBooking(Long id, BookingPatchDTO patchDTO) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
-        if (patchDTO.getShowtimeId() != null) {
-            // TODO: set showtime entity nếu cần
+//        if (patchDTO.getShowtimeId() != null) {
+//            // TODO: set showtime entity nếu cần
+//        }
+//        if (patchDTO.getUserId() != null) {
+//            // TODO: set user entity nếu cần
+//        }
+//        if (patchDTO.getTotalPrice() != null) booking.setTotalAmount(Double.valueOf(patchDTO.getTotalPrice()));
+//        if (patchDTO.getPaymentMethod() != null) booking.setPaymentMethod(patchDTO.getPaymentMethod());
+//        if (patchDTO.getNote() != null) booking.setNote(patchDTO.getNote());
+//        if (patchDTO.getIsActive() != null) booking.setIsActive(patchDTO.getIsActive());
+//        if (patchDTO.getBookingTime() != null) booking.setBookingTime(patchDTO.getBookingTime());
+        if (patchDTO.getStatus() != null) {
+            try {
+                Booking.BookingStatus statusEnum = Booking.BookingStatus.valueOf(patchDTO.getStatus());
+                booking.setStatus(statusEnum);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid booking status: " + patchDTO.getStatus());
+            }
         }
-        if (patchDTO.getUserId() != null) {
-            // TODO: set user entity nếu cần
-        }
-        if (patchDTO.getTotalPrice() != null) booking.setTotalAmount(Double.valueOf(patchDTO.getTotalPrice()));
-        if (patchDTO.getPaymentMethod() != null) booking.setPaymentMethod(patchDTO.getPaymentMethod());
-        if (patchDTO.getNote() != null) booking.setNote(patchDTO.getNote());
-        if (patchDTO.getIsActive() != null) booking.setIsActive(patchDTO.getIsActive());
-        if (patchDTO.getBookingTime() != null) booking.setBookingTime(patchDTO.getBookingTime());
         return bookingRepository.save(booking);
     }
 
@@ -202,6 +253,7 @@ public class BookingServiceImpl implements BookingService {
             }
         }
     }
+
 
     private void loadBookingInfo(Booking booking) {
         loadSeatInfo(booking);

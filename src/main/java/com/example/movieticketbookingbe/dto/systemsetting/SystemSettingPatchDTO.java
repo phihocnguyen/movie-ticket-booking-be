@@ -15,7 +15,7 @@ public class SystemSettingPatchDTO {
     private BigDecimal cancelFee;
     private Integer cancelTimeLimit;
 
-    private Integer priceSeatRegular;
-    private Integer priceSeatVip;
-    private Integer priceSeatDouble;
+    private Double  priceSeatRegular;
+    private Double  priceSeatVip;
+    private Double  priceSeatDouble;
 }

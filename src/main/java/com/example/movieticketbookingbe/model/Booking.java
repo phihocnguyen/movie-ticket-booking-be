@@ -1,15 +1,12 @@
 package com.example.movieticketbookingbe.model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,9 +21,12 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"bookings"})  // ✨ Ngăn vòng lặp khi serialize user.bookings
+    private User user;
+//    @Column( nullable = false)
+//    private Long userId;
 
     @Column(name = "showtime_id", nullable = false)
     private Long showtimeId;
@@ -142,9 +142,9 @@ public class Booking {
         this.note = note;
     }
 
-    public Object getUser() {
-        return null;
-    }
+//    public Object getUser() {
+//        return null;
+//    }
 
     public Object getSeat() {
         return null;

@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.service;
 
+import com.example.movieticketbookingbe.dto.booking.BookingRequestDTO;
 import com.example.movieticketbookingbe.model.Booking;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Optional;
 
 public interface BookingService {
     Booking createBooking(Booking booking);
+    Booking createBookingFromDTO(BookingRequestDTO dto);
 
     Booking updateBooking(Long id, Booking booking);
 
@@ -21,6 +23,7 @@ public interface BookingService {
     List<Booking> getBookingsByUser(Long userId);
 
     List<Booking> getBookingsByShowtime(Long showtimeId);
+    List<Booking> getBookingsByOwner(Long ownerId);
 
     List<Booking> searchBookings(Long userId, Long showtimeId, LocalDateTime startTime, LocalDateTime endTime);
 
@@ -29,4 +32,5 @@ public interface BookingService {
     Booking completeBooking(Long id);
 
     Booking patchBooking(Long id, com.example.movieticketbookingbe.dto.booking.BookingPatchDTO patchDTO);
+
 }

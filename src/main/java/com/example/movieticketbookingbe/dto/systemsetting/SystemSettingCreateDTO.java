@@ -18,7 +18,7 @@ public class SystemSettingCreateDTO {
     private BigDecimal cancelFee;
     private Integer cancelTimeLimit;
 
-    private Integer priceSeatRegular;
-    private Integer priceSeatVip;
-    private Integer priceSeatDouble;
+    private Double  priceSeatRegular;
+    private Double  priceSeatVip;
+    private Double  priceSeatDouble;
 }

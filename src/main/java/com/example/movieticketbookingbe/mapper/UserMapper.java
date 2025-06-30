@@ -20,7 +20,7 @@ public class UserMapper {
         dto.setDateOfBirth(user.getDateOfBirth());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
-        dto.setBookings(user.getBookings() != null ? user.getBookings().stream().map(BookingMapper::toDTO).collect(Collectors.toList()) : null);
+//        dto.setBookings(user.getBookings() != null ? user.getBookings().stream().map(BookingMapper::toDTO).collect(Collectors.toList()) : null);
         return dto;
     }
 

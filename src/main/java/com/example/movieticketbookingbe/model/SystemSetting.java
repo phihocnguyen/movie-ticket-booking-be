@@ -36,13 +36,13 @@ public class SystemSetting {
     private Integer cancelTimeLimit;
 
     @Column(name = "price_seat_regular")
-    private Integer priceSeatRegular;
+    private Double  priceSeatRegular;
 
     @Column(name = "price_seat_vip")
-    private Integer priceSeatVip;
+    private Double  priceSeatVip;
 
     @Column(name = "price_seat_double")
-    private Integer priceSeatDouble;
+    private Double  priceSeatDouble;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

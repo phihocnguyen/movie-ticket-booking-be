@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,6 +47,7 @@ public class User implements UserDetails {
 
     @OneToMany
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private List<Booking> bookings;
 
     @Column(nullable = false, unique = true)

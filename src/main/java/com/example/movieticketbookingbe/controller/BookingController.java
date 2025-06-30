@@ -53,9 +53,11 @@ public class BookingController {
             @Parameter(description = "Booking request data", required = true) @RequestBody BookingRequestDTO bookingRequest,
             @RequestParam String paymentMethod,
             HttpServletRequest request) {
-        Booking booking = BookingMapper.toEntity(bookingRequest);
-        Booking savedBooking = bookingService.createBooking(booking);
-        // Tạo payment liên kết với booking
+
+        //  CHUYỂN DTO sang Booking trong service
+        Booking savedBooking = bookingService.createBookingFromDTO(bookingRequest);
+
+        // Tạo payment liên kết
         Payment payment = new Payment();
         payment.setBooking(savedBooking);
         payment.setAmount(savedBooking.getTotalAmount());
@@ -63,15 +65,20 @@ public class BookingController {
         payment.setStatus(Payment.PaymentStatus.PENDING.name());
         payment.setIsActive(true);
         Payment savedPayment = paymentService.createPayment(payment);
+
         if ("VNPAY".equalsIgnoreCase(paymentMethod)) {
             String clientIp = request.getHeader("X-Forwarded-For");
             if (clientIp == null) clientIp = request.getRemoteAddr();
-            if ("0:0:0:0:0:0:0:1".equals(clientIp)) {
-                clientIp = "127.0.0.1";
-            }
-            String vnpayUrl = vnpayService.createVnpayPaymentUrl(savedBooking.getId(), savedBooking.getTotalAmount(), vnpayReturnUrl, clientIp);
+            if ("0:0:0:0:0:0:0:1".equals(clientIp)) clientIp = "127.0.0.1";
+            String vnpayUrl = vnpayService.createVnpayPaymentUrl(
+                    savedBooking.getId(),
+                    savedBooking.getTotalAmount(),
+                    vnpayReturnUrl,
+                    clientIp
+            );
             return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking created, redirect to VNPAY", vnpayUrl));
         }
+
         BookingDTO dto = BookingMapper.toDTO(savedBooking);
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Booking created successfully", dto));
     }
@@ -180,5 +187,12 @@ public class BookingController {
     public ResponseEntity<Booking> completeBooking(
             @Parameter(description = "ID of the booking to complete") @PathVariable Long id) {
         return ResponseEntity.ok(bookingService.completeBooking(id));
+    }
+    @Operation(summary = "Get all bookings by owner", description = "Returns all bookings across all cinemas owned by a specific owner")
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<ApiResponseDTO<List<BookingDTO>>> getBookingsByOwner(
+            @Parameter(description = "ID of the owner") @PathVariable Long ownerId) {
+        List<BookingDTO> dtos = bookingService.getBookingsByOwner(ownerId).stream().map(BookingMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Lấy danh sách đặt vé theo owner thành công", dtos));
     }
 }

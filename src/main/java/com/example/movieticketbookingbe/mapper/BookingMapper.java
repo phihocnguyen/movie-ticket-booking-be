@@ -5,20 +5,34 @@ import com.example.movieticketbookingbe.dto.booking.BookingRequestDTO;
 import com.example.movieticketbookingbe.model.Booking;
 import com.example.movieticketbookingbe.model.Booking.BookingSeatInfo;
 import com.example.movieticketbookingbe.model.Booking.BookingFoodInfo;
+
+import java.util.List;
 import java.util.stream.Collectors;
 import com.example.movieticketbookingbe.dto.user.UserDTO;
 import com.example.movieticketbookingbe.dto.showtime.ShowtimeDTO;
 import com.example.movieticketbookingbe.dto.seat.SeatDTO;
 import com.example.movieticketbookingbe.dto.payment.PaymentDTO;
+import com.example.movieticketbookingbe.model.User;
+import com.example.movieticketbookingbe.repository.UserRepository;
 
 public class BookingMapper {
     public static BookingDTO toDTO(Booking booking) {
         if (booking == null) return null;
+
         BookingDTO dto = new BookingDTO();
         dto.setId(booking.getId());
-        // dto.setUser(booking.getUser() != null ? UserMapper.toDTO(booking.getUser()) : null);
+
+        // Map user
+        if (booking.getUser() != null) {
+            UserDTO userDTO = UserMapper.toDTO(booking.getUser());
+            dto.setUser(userDTO);
+            dto.setUserId(booking.getUser().getId());
+        }
+
+        // Map showtime
         dto.setShowtime(booking.getShowtime() != null ? ShowtimeMapper.toDTO(booking.getShowtime()) : null);
-        // dto.setSeat(booking.getSeat() != null ? SeatMapper.toDTO(booking.getSeat()) : null);
+
+        // Map payment
         if (booking.getPayment() != null) {
             PaymentDTO paymentDTO = new PaymentDTO();
             paymentDTO.setId(booking.getPayment().getId());
@@ -30,12 +44,16 @@ public class BookingMapper {
         } else {
             dto.setPayment(null);
         }
+
         dto.setStatus(booking.getStatus() != null ? booking.getStatus().name() : null);
         dto.setBookingTime(booking.getBookingTime());
         dto.setCreatedAt(booking.getCreatedAt());
         dto.setUpdatedAt(booking.getUpdatedAt());
+
+        // Map booking seats
+        double totalTicketPrice = 0.0;
         if (booking.getBookingSeats() != null) {
-            dto.setBookingSeats(booking.getBookingSeats().stream().map(seat -> {
+            List<BookingDTO.BookingSeatInfoDTO> seatDTOs = booking.getBookingSeats().stream().map(seat -> {
                 BookingDTO.BookingSeatInfoDTO seatDTO = new BookingDTO.BookingSeatInfoDTO();
                 seatDTO.setSeatId(seat.getSeatId());
                 seatDTO.setPrice(seat.getPrice());
@@ -44,25 +62,51 @@ public class BookingMapper {
                 seatDTO.setRowNumber(seat.getRowNumber());
                 seatDTO.setColumnNumber(seat.getColumnNumber());
                 return seatDTO;
-            }).collect(Collectors.toList()));
+            }).collect(Collectors.toList());
+
+            totalTicketPrice = booking.getBookingSeats().stream()
+                    .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 0.0)
+                    .sum();
+
+            dto.setBookingSeats(seatDTOs);
         }
+
+        // Map booking foods
+        double totalFoodPrice = 0.0;
         if (booking.getBookingFoods() != null) {
-            dto.setBookingFoods(booking.getBookingFoods().stream().map(food -> {
+            List<BookingDTO.BookingFoodInfoDTO> foodDTOs = booking.getBookingFoods().stream().map(food -> {
                 BookingDTO.BookingFoodInfoDTO foodDTO = new BookingDTO.BookingFoodInfoDTO();
                 foodDTO.setFoodInventoryId(food.getFoodInventoryId());
                 foodDTO.setQuantity(food.getQuantity());
                 foodDTO.setPrice(food.getPrice());
                 foodDTO.setFoodName(food.getFoodName());
                 return foodDTO;
-            }).collect(Collectors.toList()));
+            }).collect(Collectors.toList());
+
+            totalFoodPrice = booking.getBookingFoods().stream()
+                    .mapToDouble(food -> {
+                        double price = food.getPrice() != null ? food.getPrice() : 0.0;
+                        int quantity = food.getQuantity() != null ? food.getQuantity() : 0;
+                        return price * quantity;
+                    })
+                    .sum();
+
+            dto.setBookingFoods(foodDTOs);
         }
+
+        // Gán tổng tiền
+        dto.setTotalTicketPrice(totalTicketPrice);
+        dto.setTotalFoodPrice(totalFoodPrice);
+        dto.setTotalAmount(totalTicketPrice + totalFoodPrice);
+
         return dto;
     }
 
-    public static Booking toEntity(BookingRequestDTO dto) {
+
+    public static Booking toEntity(BookingRequestDTO dto, User user) {
         if (dto == null) return null;
         Booking booking = new Booking();
-        booking.setUserId(dto.getUserId());
+        booking.setUser(user);
         booking.setShowtimeId(dto.getShowtimeId());
         booking.setBookingTime(dto.getBookingTime());
         booking.setTotalAmount(dto.getTotalAmount());

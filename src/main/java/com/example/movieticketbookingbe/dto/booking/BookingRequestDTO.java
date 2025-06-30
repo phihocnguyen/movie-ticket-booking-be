@@ -1,5 +1,6 @@
 package com.example.movieticketbookingbe.dto.booking;
 
+import com.example.movieticketbookingbe.dto.user.UserDTO;
 import com.example.movieticketbookingbe.model.Booking.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 public class BookingRequestDTO {
     private Long userId;
+
     private Long showtimeId;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
