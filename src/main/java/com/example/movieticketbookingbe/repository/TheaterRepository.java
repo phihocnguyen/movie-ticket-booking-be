@@ -30,4 +30,5 @@ public interface TheaterRepository extends JpaRepository<Theater, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
 
     List<Theater> findByTheaterOwnerId(Long theaterOwnerId);
+
 }

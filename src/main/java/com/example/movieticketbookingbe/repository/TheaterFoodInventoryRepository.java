@@ -13,4 +13,6 @@ public interface TheaterFoodInventoryRepository extends JpaRepository<TheaterFoo
     List<TheaterFoodInventory> findByTheaterId(Long theaterId);
 
     boolean existsByTheaterIdAndName(Long theaterId, String name);
+    List<TheaterFoodInventory> findByTheaterIdIn(List<Long> theaterIds);
+
 }

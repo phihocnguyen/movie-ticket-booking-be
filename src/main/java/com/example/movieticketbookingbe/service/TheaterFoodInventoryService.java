@@ -25,4 +25,6 @@ public interface TheaterFoodInventoryService {
     boolean existsByTheaterAndName(Long theaterId, String name);
 
     TheaterFoodInventory patchTheaterFoodInventory(Long id, TheaterFoodInventoryPatchDTO patchDTO);
+
+    List<TheaterFoodInventory> getTheaterFoodInventoryByUserId(Long userId);
 }

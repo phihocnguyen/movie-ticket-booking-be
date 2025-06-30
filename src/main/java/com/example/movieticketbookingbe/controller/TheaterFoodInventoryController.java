@@ -111,4 +111,19 @@ public class TheaterFoodInventoryController {
             @Parameter(description = "Name of the food item") @RequestParam String name) {
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Check completed successfully", theaterFoodInventoryService.existsByTheaterAndName(theaterId, name)));
     }
+
+
+    @Operation(summary = "Get all theater foods by owner", description = "Returns all food items from all theaters owned by a specific owner")
+    @ApiResponse(responseCode = "200", description = "List of user’s theater foods retrieved successfully")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponseDTO<List<TheaterFoodInventoryDTO>>> getAllTheaterFoodsByUser(
+            @Parameter(description = "ID of the user") @PathVariable Long userId) {
+        List<TheaterFoodInventoryDTO> dtos = theaterFoodInventoryService
+                .getTheaterFoodInventoryByUserId(userId)
+                .stream()
+                .map(TheaterFoodInventoryMapper::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "List of user's theater foods retrieved successfully", dtos));
+    }
 }

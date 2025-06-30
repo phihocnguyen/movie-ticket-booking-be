@@ -8,12 +8,25 @@ import com.example.movieticketbookingbe.dto.theaterfoodinventory.TheaterFoodInve
 public class TheaterFoodInventoryMapper {
     public static TheaterFoodInventoryDTO toDTO(TheaterFoodInventory entity) {
         if (entity == null) return null;
+
         TheaterFoodInventoryDTO dto = new TheaterFoodInventoryDTO();
         dto.setId(entity.getId());
+        dto.setName(entity.getName());
         dto.setFoodName(entity.getFoodName());
-        dto.setQuantity(entity.getQuantity());
+        dto.setDescription(entity.getDescription());
         dto.setPrice(entity.getPrice());
-        dto.setTheater(entity.getTheater() != null ? TheaterMapper.toDTO(entity.getTheater()) : null);
+        dto.setImageUrl(entity.getImageUrl());
+        dto.setCategory(entity.getCategory());
+        dto.setPreparationTime(entity.getPreparationTime());
+        dto.setQuantity(entity.getQuantity());
+        dto.setIsActive(entity.getIsActive());
+
+        if (entity.getTheater() != null) {
+            dto.setTheater(TheaterMapper.toDTO(entity.getTheater()));
+        } else {
+            dto.setTheater(null);
+        }
+
         return dto;
     }
 
