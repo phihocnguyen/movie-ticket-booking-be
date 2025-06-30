@@ -35,7 +35,7 @@ public class FirebaseService {
     public void pushNewMovieNotification(MovieCreatedEvent event) {
         Map<String, Object> notification = new HashMap<>();
         notification.put("type", "NEW_MOVIE");
-        notification.put("message", "Phim Mới Cập Nhật !!!:";
+        notification.put("message", "Phim Mới Cập Nhật !!!:");
         notification.put("movieId", event.getMovieId());
         notification.put("createdAt", new Date().getTime());
         notification.put("readUsers", new ArrayList<>());
