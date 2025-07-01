@@ -16,4 +16,6 @@ public class ShowtimePatchDTO {
     private Boolean isActive;
     private Long movieId;
     private Long screenId;
+    private Long theaterId;
+
 } 

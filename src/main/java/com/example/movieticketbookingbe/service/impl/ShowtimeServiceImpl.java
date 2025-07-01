@@ -145,6 +145,11 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
+    public List<Showtime> getShowtimesByOwner(Long OwnerId) {
+        return showtimeRepository.findByTheater_TheaterOwner_IdAndIsActiveTrue(OwnerId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Showtime> getActiveShowtimesByMovieId(Long movieId) {
         return showtimeRepository.findByMovieIdAndIsActiveTrue(movieId);
@@ -203,11 +208,24 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         if (patchDTO.getPrice() != null) showtime.setPrice(Double.valueOf(patchDTO.getPrice()));
         if (patchDTO.getIsActive() != null) showtime.setIsActive(patchDTO.getIsActive());
         if (patchDTO.getMovieId() != null) {
-            // TODO: set movie entity nếu cần
+            Movie movie = movieRepository.findById(patchDTO.getMovieId())
+                    .orElseThrow(() -> new RuntimeException("Movie not found"));
+            showtime.setMovie(movie);
         }
+
         if (patchDTO.getScreenId() != null) {
-            // TODO: set screen entity nếu cần
+            Screen screen = screenRepository.findById(patchDTO.getScreenId())
+                    .orElseThrow(() -> new RuntimeException("Screen not found"));
+            showtime.setScreen(screen);
         }
+
+        if (patchDTO.getTheaterId() != null) {
+            Theater theater = theaterRepository.findById(patchDTO.getTheaterId())
+                    .orElseThrow(() -> new RuntimeException("Theater not found"));
+            showtime.setTheater(theater);
+        }
+
+
         
         // Update timestamp
         showtime.setUpdatedAt(LocalDateTime.now());

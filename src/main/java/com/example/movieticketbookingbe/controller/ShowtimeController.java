@@ -48,10 +48,24 @@ public class ShowtimeController {
                 .map(showtime -> ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtime retrieved successfully", ShowtimeMapper.toDTO(showtime))))
                 .orElse(ResponseEntity.notFound().build());
     }
+//    @GetMapping("/screen/{id}")
+//    public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getShowtimeByScreen(@PathVariable Long id) {
+//        List<ShowtimeDTO> dtos = showtimeService.getShowtimesByScreenId(id).stream().map(ShowtimeMapper::toDTO).toList();
+//        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
+//    }
 
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getAllShowtimes() {
         List<ShowtimeDTO> dtos = showtimeService.getAllShowtimes().stream().map(ShowtimeMapper::toDTO).toList();
+        return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
+    }
+    @GetMapping("/owner/{OwnerId}")
+    public ResponseEntity<ApiResponseDTO<List<ShowtimeDTO>>> getAllShowtimesByOwner(@PathVariable("OwnerId") Long OwnerId) {
+        List<ShowtimeDTO> dtos = showtimeService.getShowtimesByOwner(OwnerId)
+                .stream()
+                .map(ShowtimeMapper::toDTO)
+                .toList();
+
         return ResponseEntity.ok(new ApiResponseDTO<>(200, "Showtimes retrieved successfully", dtos));
     }
 

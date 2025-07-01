@@ -8,4 +8,5 @@ public class ScreenPatchDTO {
     private Integer capacity;
     private Boolean isActive;
     private Long theaterId;
+    private String screenType;
 } 

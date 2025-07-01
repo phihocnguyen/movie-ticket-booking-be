@@ -18,6 +18,7 @@ public interface ShowtimeService {
     List<Showtime> getAllShowtimes();
 
     List<Showtime> getActiveShowtimes();
+    List<Showtime> getShowtimesByOwner(Long OwnerId);
 
     List<Showtime> getShowtimesByMovieId(Long movieId);
 

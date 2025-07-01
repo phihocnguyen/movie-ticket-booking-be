@@ -218,6 +218,7 @@ public class ScreenServiceImpl implements ScreenService {
         if (patchDTO.getTheaterId() != null) {
             // TODO: set theater entity nếu cần
         }
+        if(patchDTO.getScreenType()!= null) screen.setScreenType(patchDTO.getScreenType());
         return screenRepository.save(screen);
     }
 
