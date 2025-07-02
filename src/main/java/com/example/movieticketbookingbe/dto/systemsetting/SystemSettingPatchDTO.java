@@ -12,8 +12,8 @@ public class SystemSettingPatchDTO {
     private BigDecimal commissionRate;
     private Integer maxVoucherPerType;
 
-    private BigDecimal cancelFee;
-    private Integer cancelTimeLimit;
+//    private BigDecimal cancelFee;
+//    private Integer cancelTimeLimit;
 
     private Double  priceSeatRegular;
     private Double  priceSeatVip;

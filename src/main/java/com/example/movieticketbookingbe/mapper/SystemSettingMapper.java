@@ -19,8 +19,8 @@ public class SystemSettingMapper {
         dto.setOwnerId(setting.getOwner() != null ? setting.getOwner().getId() : null);
         dto.setCommissionRate(setting.getCommissionRate());
         dto.setMaxVoucherPerType(setting.getMaxVoucherPerType());
-        dto.setCancelFee(setting.getCancelFee());
-        dto.setCancelTimeLimit(setting.getCancelTimeLimit());
+//        dto.setCancelFee(setting.getCancelFee());
+//        dto.setCancelTimeLimit(setting.getCancelTimeLimit());
         dto.setPriceSeatRegular(setting.getPriceSeatRegular());
         dto.setPriceSeatVip(setting.getPriceSeatVip());
         dto.setPriceSeatDouble(setting.getPriceSeatDouble());
@@ -33,8 +33,8 @@ public class SystemSettingMapper {
         setting.setOwner(owner);
         setting.setCommissionRate(dto.getCommissionRate());
         setting.setMaxVoucherPerType(dto.getMaxVoucherPerType());
-        setting.setCancelFee(dto.getCancelFee());
-        setting.setCancelTimeLimit(dto.getCancelTimeLimit());
+//        setting.setCancelFee(dto.getCancelFee());
+//        setting.setCancelTimeLimit(dto.getCancelTimeLimit());
         setting.setPriceSeatRegular(dto.getPriceSeatRegular());
         setting.setPriceSeatVip(dto.getPriceSeatVip());
         setting.setPriceSeatDouble(dto.getPriceSeatDouble());
@@ -51,12 +51,12 @@ public class SystemSettingMapper {
         if (dto.getMaxVoucherPerType() != null) {
             setting.setMaxVoucherPerType(dto.getMaxVoucherPerType());
         }
-        if (dto.getCancelFee() != null) {
-            setting.setCancelFee(dto.getCancelFee());
-        }
-        if (dto.getCancelTimeLimit() != null) {
-            setting.setCancelTimeLimit(dto.getCancelTimeLimit());
-        }
+//        if (dto.getCancelFee() != null) {
+//            setting.setCancelFee(dto.getCancelFee());
+//        }
+//        if (dto.getCancelTimeLimit() != null) {
+//            setting.setCancelTimeLimit(dto.getCancelTimeLimit());
+//        }
         if (dto.getPriceSeatRegular() != null) {
             setting.setPriceSeatRegular(dto.getPriceSeatRegular());
         }

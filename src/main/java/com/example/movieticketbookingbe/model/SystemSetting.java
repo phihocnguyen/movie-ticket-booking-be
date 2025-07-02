@@ -29,11 +29,11 @@ public class SystemSetting {
     @Column(name = "max_voucher_per_type", nullable = true)
     private Integer maxVoucherPerType;
 
-    @Column(name = "cancel_fee")
-    private BigDecimal cancelFee;
-
-    @Column(name = "cancel_time_limit")
-    private Integer cancelTimeLimit;
+//    @Column(name = "cancel_fee")
+//    private BigDecimal cancelFee;
+//
+//    @Column(name = "cancel_time_limit")
+//    private Integer cancelTimeLimit;
 
     @Column(name = "price_seat_regular")
     private Double  priceSeatRegular;

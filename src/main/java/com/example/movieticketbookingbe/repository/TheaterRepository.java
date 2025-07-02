@@ -3,6 +3,7 @@ package com.example.movieticketbookingbe.repository;
 import com.example.movieticketbookingbe.model.Theater;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,5 +31,8 @@ public interface TheaterRepository extends JpaRepository<Theater, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
 
     List<Theater> findByTheaterOwnerId(Long theaterOwnerId);
+    long countByIsActiveTrue();
+    @Query("SELECT COUNT(t.id) FROM Theater t WHERE t.theaterOwnerId = :ownerId")
+    Long getTotalTheatersByOwner(Long ownerId);
 
 }

@@ -46,4 +46,7 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
                         Long movieId, Long theaterId, LocalDateTime startTime, LocalDateTime endTime);
 
         List<Showtime> findByTheater_TheaterOwner_IdAndIsActiveTrue(Long theaterOwnerId);
+
+        @Query("SELECT COUNT(s.id) FROM Showtime s WHERE s.theater.theaterOwnerId = :ownerId")
+        Long getTotalShowtimesByOwner(Long ownerId);
 }
